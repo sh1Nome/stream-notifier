@@ -5,3 +5,19 @@
 # 対応プラットフォーム
 * YouTube
 * Twitch
+
+# 仕様
+## アカウント登録
+* `/sn-regist [OPTION] [ACCOUNT]`
+    * OPTION
+        * youtube
+        * twitch
+
+## アカウント登録解除
+* `/sn-unregist [OPTION] [ACCOUNT]`
+    * OPTION
+        * youtube
+        * twitch
+
+## ヘルプ
+* `/sn-help`
