@@ -6,3 +6,5 @@ services:
     init: true
     volumes:
       - './work:/home/work'
+    env_file:
+      - './.env'
