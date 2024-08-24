@@ -4,6 +4,9 @@
 # Ignore Gradle build output directory
 build
 
+# 環境変数
+.env
+
 # その他
 .cache
 .dotnet
