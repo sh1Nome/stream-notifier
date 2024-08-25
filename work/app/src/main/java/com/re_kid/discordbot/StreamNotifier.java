@@ -1,21 +1,24 @@
 package com.re_kid.discordbot;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.JDABuilder;
 
 public class StreamNotifier {
 
-    final static Logger logger = LoggerFactory.getLogger(StreamNotifier.class);
+    private final JDA jda;
+
+    public StreamNotifier(JDA jda) {
+        this.jda = jda;
+    }
+
+    public void run() {
+
+    }
 
     public static void main(String[] args) {
-        logger.info("Start StreamNotifier");
-
-        JDA jda = JDABuilder.createDefault(System.getenv("STREAM_NOTIFIER_TOKEN"))
-                .build();
-
-        logger.info("Finish StreamNotifier");
+        Injector injector = Guice.createInjector(new StreamNotifierModule());
+        injector.getInstance(StreamNotifier.class).run();
     }
 }

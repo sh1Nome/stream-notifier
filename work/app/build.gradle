@@ -25,6 +25,8 @@ dependencies {
     implementation group: 'net.dv8tion', name: 'JDA', version: '5.1.0'
     // https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.5.6'
+    // https://mvnrepository.com/artifact/com.google.inject/guice
+    implementation group: 'com.google.inject', name: 'guice', version: '7.0.0'
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
