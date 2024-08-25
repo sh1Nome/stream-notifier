@@ -2,19 +2,22 @@ package com.re_kid.discordbot;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.re_kid.discordbot.event.Help;
 
 import net.dv8tion.jda.api.JDA;
 
 public class StreamNotifier {
 
-    private final JDA jda;
+    private final JDA api;
+    private final Help help;
 
-    public StreamNotifier(JDA jda) {
-        this.jda = jda;
+    public StreamNotifier(JDA api, Help help) {
+        this.api = api;
+        this.help = help;
     }
 
     public void run() {
-
+        this.api.addEventListener(this.help);
     }
 
     public static void main(String[] args) {
