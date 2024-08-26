@@ -11,15 +11,15 @@ import net.dv8tion.jda.api.JDA;
 public class StreamNotifier {
 
     private final JDA api;
-    private final StreamNotifierEventListener help;
+    private final StreamNotifierEventListener streamNotifierEventListener;
 
-    public StreamNotifier(JDA api, StreamNotifierEventListener help) {
+    public StreamNotifier(JDA api, StreamNotifierEventListener streamNotifierEventListener) {
         this.api = api;
-        this.help = help;
+        this.streamNotifierEventListener = streamNotifierEventListener;
     }
 
     public void run() {
-        this.api.addEventListener(this.help);
+        this.api.addEventListener(this.streamNotifierEventListener);
     }
 
     public static void main(String[] args) {
