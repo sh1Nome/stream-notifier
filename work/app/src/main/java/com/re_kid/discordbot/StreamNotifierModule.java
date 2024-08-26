@@ -12,46 +12,51 @@ import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 
 /**
- * DI設定
+ * DI設定クラス
  */
 public class StreamNotifierModule extends AbstractModule {
 
     /**
-     * 実行クラス
+     * 実行クラスをDIに設定する
      * 
-     * @param api  JDAライブラリ
-     * @param help helpコマンド
+     * @param api                         JDA
+     * @param streamNotifierEventListener イベントリスナー
      * @return 実行クラス
      */
     @Provides
     @Singleton
-    public StreamNotifier provideStreamNotifier(JDA api, StreamNotifierEventListener help) {
-        return new StreamNotifier(api, help);
+    public StreamNotifier provideStreamNotifier(JDA api, StreamNotifierEventListener streamNotifierEventListener) {
+        return new StreamNotifier(api, streamNotifierEventListener);
     }
 
     /**
-     * JDAライブラリ
+     * JDAをDIに設定する
      * 
-     * @return JDAライブラリ
+     * @return JDA
      */
     @Provides
     @Singleton
     public JDA provideJDA() {
         return JDABuilder.createDefault(System.getenv("STREAM_NOTIFIER_TOKEN"))
-                .enableIntents(this.addGatewayIntents())
+                .enableIntents(this.getUpcomingGatewayIntents())
                 .build();
     }
 
-    private Collection<GatewayIntent> addGatewayIntents() {
+    /**
+     * 追加するGatewayIntentsを取得する
+     * 
+     * @return 追加するGatewayIntents
+     */
+    private Collection<GatewayIntent> getUpcomingGatewayIntents() {
         Collection<GatewayIntent> gatewayIntents = new HashSet<>();
         gatewayIntents.add(GatewayIntent.MESSAGE_CONTENT);
         return gatewayIntents;
     }
 
     /**
-     * helpコマンド
+     * イベントリスナーをDIに設定する
      * 
-     * @return helpコマンド
+     * @return イベントリスナー
      */
     @Provides
     @Singleton
