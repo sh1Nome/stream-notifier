@@ -5,14 +5,15 @@ import java.util.HashSet;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
-import com.re_kid.discordbot.event.Help;
 
 import jakarta.inject.Singleton;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.requests.GatewayIntent;
-import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
+/**
+ * DI設定
+ */
 public class StreamNotifierModule extends AbstractModule {
 
     /**
@@ -24,7 +25,7 @@ public class StreamNotifierModule extends AbstractModule {
      */
     @Provides
     @Singleton
-    public StreamNotifier provideStreamNotifier(JDA api, Help help) {
+    public StreamNotifier provideStreamNotifier(JDA api, StreamNotifierEventListener help) {
         return new StreamNotifier(api, help);
     }
 
@@ -54,8 +55,8 @@ public class StreamNotifierModule extends AbstractModule {
      */
     @Provides
     @Singleton
-    public Help provideHelp() {
-        return new Help();
+    public StreamNotifierEventListener provideHelp() {
+        return new StreamNotifierEventListener();
     }
 
 }
