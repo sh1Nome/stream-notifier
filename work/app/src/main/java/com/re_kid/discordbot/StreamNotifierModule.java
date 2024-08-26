@@ -3,6 +3,9 @@ package com.re_kid.discordbot;
 import java.util.Collection;
 import java.util.HashSet;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 
@@ -15,6 +18,17 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
  * DI設定クラス
  */
 public class StreamNotifierModule extends AbstractModule {
+
+    /**
+     * ログクラスをDIに設定する
+     * 
+     * @return ログクラス
+     */
+    @Provides
+    @Singleton
+    public Logger provideLogger() {
+        return LoggerFactory.getLogger(StreamNotifier.class);
+    }
 
     /**
      * 実行クラスをDIに設定する
@@ -56,12 +70,14 @@ public class StreamNotifierModule extends AbstractModule {
     /**
      * イベントリスナーをDIに設定する
      * 
+     * @param logger ログクラス
+     * 
      * @return イベントリスナー
      */
     @Provides
     @Singleton
-    public StreamNotifierEventListener provideHelp() {
-        return new StreamNotifierEventListener();
+    public StreamNotifierEventListener provideHelp(Logger logger) {
+        return new StreamNotifierEventListener(logger);
     }
 
 }

@@ -2,6 +2,9 @@ package com.re_kid.discordbot;
 
 import java.util.Optional;
 
+import org.slf4j.Logger;
+
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.Event;
 import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -30,6 +33,13 @@ public class StreamNotifierEventListener implements EventListener {
         public String toString() {
             return this.prefix + this.command;
         }
+
+    }
+
+    private final Logger logger;
+
+    public StreamNotifierEventListener(Logger logger) {
+        this.logger = logger;
     }
 
     @Override
@@ -58,11 +68,23 @@ public class StreamNotifierEventListener implements EventListener {
      * @param event メッセージ受信時のイベント
      */
     private void onMessageReceivedEvent(MessageReceivedEvent event) {
-        if (event.getAuthor().isBot()) {
-            return;
-        }
-        if (CommandList.Help.toString().equals(event.getMessage().getContentRaw())) {
-            event.getChannel().sendMessage("sn!helpテスト").queue();
-        }
+        User author = event.getAuthor();
+        CommandList help = CommandList.Help;
+        Optional.ofNullable(event).filter(e -> !author.isBot())
+                .filter(e -> help.toString().equals(e.getMessage().getContentRaw()))
+                .ifPresent(e -> {
+                    this.recordLogInvokedCommand(help, author);
+                    event.getChannel().sendMessage("sn!helpテスト").queue();
+                });
+    }
+
+    /**
+     * コマンドの実行ログを記録する
+     * 
+     * @param command 実行されたコマンド
+     * @param author  コマンド実行者
+     */
+    private void recordLogInvokedCommand(CommandList command, User author) {
+        logger.info(String.format("Command invoked: %s invoked by %s", command.toString(), author.getName()));
     }
 }
