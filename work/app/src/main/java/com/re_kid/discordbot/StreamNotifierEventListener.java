@@ -16,7 +16,9 @@ public class StreamNotifierEventListener implements EventListener {
      * コマンドリスト
      */
     private static enum CommandList {
-        Help("sn!help");
+        Help("help");
+
+        private final String prefix = "sn!";
 
         private final String command;
 
@@ -26,7 +28,7 @@ public class StreamNotifierEventListener implements EventListener {
 
         @Override
         public String toString() {
-            return this.command;
+            return this.prefix + this.command;
         }
     }
 
@@ -60,7 +62,7 @@ public class StreamNotifierEventListener implements EventListener {
             return;
         }
         if (CommandList.Help.toString().equals(event.getMessage().getContentRaw())) {
-            System.out.println("debug");
+            event.getChannel().sendMessage("sn!helpテスト").queue();
         }
     }
 }
