@@ -2,6 +2,7 @@ package com.re_kid.discordbot;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.re_kid.discordbot.listener.StreamNotifierEventListener;
 
 import net.dv8tion.jda.api.JDA;
 

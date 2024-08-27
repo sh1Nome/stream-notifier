@@ -8,10 +8,15 @@ import org.slf4j.LoggerFactory;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
+import com.re_kid.discordbot.command.Help;
+import com.re_kid.discordbot.command.Prefix;
+import com.re_kid.discordbot.listener.MessageReceivedEventListener;
+import com.re_kid.discordbot.listener.StreamNotifierEventListener;
 
 import jakarta.inject.Singleton;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 
 /**
@@ -20,9 +25,9 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 public class StreamNotifierModule extends AbstractModule {
 
     /**
-     * ログクラスをDIに設定する
+     * ログオブジェクトをDIに設定する
      * 
-     * @return ログクラス
+     * @return ログオブジェクト
      */
     @Provides
     @Singleton
@@ -70,14 +75,51 @@ public class StreamNotifierModule extends AbstractModule {
     /**
      * イベントリスナーをDIに設定する
      * 
-     * @param logger ログクラス
-     * 
+     * @param messageReceivedEventListener メッセージ受信イベントリスナー
      * @return イベントリスナー
      */
     @Provides
     @Singleton
-    public StreamNotifierEventListener provideHelp(Logger logger) {
-        return new StreamNotifierEventListener(logger);
+    public StreamNotifierEventListener provideStreamNotifierEventListener(
+            MessageReceivedEventListener messageReceivedEventListener) {
+        return new StreamNotifierEventListener(messageReceivedEventListener);
+    }
+
+    /**
+     * メッセージ受信イベントリスナーをDIに設定する
+     * 
+     * @param help   helpコマンド
+     * @param logger ログオブジェクト
+     * 
+     * @return メッセージ受信イベントリスナー
+     */
+    @Provides
+    @Singleton
+    public MessageReceivedEventListener provideMessageReceivedEventListener(Help help, Logger logger) {
+        return new MessageReceivedEventListener(MessageReceivedEvent.class, help, logger);
+    }
+
+    /**
+     * コマンドの接頭辞をDIに設定する
+     * 
+     * @return コマンドの接頭辞
+     */
+    @Provides
+    @Singleton
+    public Prefix providePrefix() {
+        return new Prefix("sn", "!");
+    }
+
+    /**
+     * helpコマンドをDIに登録する
+     * 
+     * @param prefix コマンドの接頭辞
+     * @return helpコマンド
+     */
+    @Provides
+    @Singleton
+    public Help provideHelp(Prefix prefix) {
+        return new Help(prefix, "help");
     }
 
 }
