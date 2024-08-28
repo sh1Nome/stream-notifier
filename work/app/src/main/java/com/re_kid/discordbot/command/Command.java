@@ -17,10 +17,10 @@ public class Command {
         this.illegal = illegal;
     }
 
-    public Command(Message message) {
-        String[] command = message.getContentRaw().split("!");
+    public Command(Message message, Prefix prefixDefinition) {
+        String[] command = message.getContentRaw().split(prefixDefinition.getSeparator());
         if (2 == command.length) {
-            this.prefix = new Prefix(command[0], "!");
+            this.prefix = new Prefix(command[0], prefixDefinition.getSeparator());
             this.value = command[1];
             this.illegal = false;
         } else {

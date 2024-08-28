@@ -19,4 +19,13 @@ public class Prefix {
         return this.value + this.separator;
     }
 
+    /**
+     * 接頭辞のセパレーターを取得する
+     * 
+     * @return 接頭辞のセパレーター
+     */
+    public String getSeparator() {
+        return this.separator;
+    }
+
 }
