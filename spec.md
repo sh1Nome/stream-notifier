@@ -14,7 +14,7 @@
         * twitch
 
 ## アカウント登録解除
-* `/sn-unregist [OPTION] [ACCOUNT]`
+* `/sn-unregist [OPTION]`
     * OPTION
         * youtube
         * twitch
