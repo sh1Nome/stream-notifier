@@ -119,7 +119,7 @@ public class StreamNotifierModule extends AbstractModule {
     @Provides
     @Singleton
     public Help provideHelp(Prefix prefix) {
-        return new Help(prefix, "help");
+        return new Help(prefix, "help", false);
     }
 
 }

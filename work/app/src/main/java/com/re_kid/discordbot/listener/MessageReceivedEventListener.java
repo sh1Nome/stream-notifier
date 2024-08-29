@@ -34,7 +34,6 @@ public class MessageReceivedEventListener extends EventListener {
         this.convertEvent(event, eventClazz).map(e -> eventClazz.cast(e)).ifPresent(e -> {
             this.onEventHelpCommand(e);
         });
-        ;
     }
 
     /**

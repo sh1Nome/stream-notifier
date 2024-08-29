@@ -5,8 +5,8 @@ package com.re_kid.discordbot.command;
  */
 public class Help extends Command {
 
-    public Help(Prefix prefix, String value) {
-        super(prefix, value, false);
+    public Help(Prefix prefix, String value, boolean illegal) {
+        super(prefix, value, illegal);
     }
 
 }
