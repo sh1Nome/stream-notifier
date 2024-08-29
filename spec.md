@@ -1,5 +1,4 @@
 # 概要
-* **開発途中**
 * 配信の通知をするDiscordのBot
 
 # 対応プラットフォーム
@@ -14,7 +13,7 @@
         * twitch
 
 ## アカウント登録解除
-* `/sn-unregist [OPTION] [ACCOUNT]`
+* `/sn-unregist [OPTION]`
     * OPTION
         * youtube
         * twitch
