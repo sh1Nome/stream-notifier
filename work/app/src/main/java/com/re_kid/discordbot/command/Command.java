@@ -1,6 +1,9 @@
 package com.re_kid.discordbot.command;
 
+import org.slf4j.Logger;
+
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.User;
 
 /**
  * コマンドの親クラス
@@ -10,11 +13,13 @@ public class Command {
     protected Prefix prefix;
     protected String value;
     protected boolean illegal;
+    protected Logger logger;
 
-    public Command(Prefix prefix, String value, boolean illegal) {
+    public Command(Prefix prefix, String value, boolean illegal, Logger logger) {
         this.prefix = prefix;
         this.value = value;
         this.illegal = illegal;
+        this.logger = logger;
     }
 
     public Command(Message message, Prefix prefixDefinition) {
@@ -47,6 +52,15 @@ public class Command {
             return false;
         }
         return this.toString().equals(command.toString());
+    }
+
+    /**
+     * コマンドの実行ログを記録する
+     * 
+     * @param author コマンド実行者
+     */
+    public void recordLogInvokedCommand(User author) {
+        this.logger.info("Command invoked: " + this.toString() + " invoked by " + author.getName());
     }
 
 }

@@ -2,13 +2,10 @@ package com.re_kid.discordbot.listener;
 
 import java.util.Optional;
 
-import org.slf4j.Logger;
-
 import com.re_kid.discordbot.command.Command;
 import com.re_kid.discordbot.command.Help;
 import com.re_kid.discordbot.command.Prefix;
 
-import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
@@ -21,9 +18,7 @@ public class MessageReceivedEventListener extends EventListener {
     private final Prefix prefixDefinition;
     private final Help help;
 
-    public MessageReceivedEventListener(Class<MessageReceivedEvent> eventClazz, Prefix prefix, Help help,
-            Logger logger) {
-        super(logger);
+    public MessageReceivedEventListener(Class<MessageReceivedEvent> eventClazz, Prefix prefix, Help help) {
         this.eventClazz = eventClazz;
         this.prefixDefinition = prefix;
         this.help = help;
@@ -44,7 +39,7 @@ public class MessageReceivedEventListener extends EventListener {
     private void onEventHelpCommand(MessageReceivedEvent event) {
         Optional.ofNullable(event).filter(e -> !e.getAuthor().isBot())
                 .filter(e -> help.equals(new Command(e.getMessage(), prefixDefinition))).ifPresent(e -> {
-                    this.recordLogInvokedCommand(help, e.getAuthor());
+                    help.recordLogInvokedCommand(e.getAuthor());
                     e.getChannel().sendMessage("""
                             Command: `/sn-regist [OPTION] [ACCOUNT]`
                             Description: Register your account to StreamNotifier
@@ -59,16 +54,6 @@ public class MessageReceivedEventListener extends EventListener {
                                 `--twitch`: Twitch Account
                             """).queue();
                 });
-    }
-
-    /**
-     * コマンドの実行ログを記録する
-     * 
-     * @param command 実行されたコマンド
-     * @param author  コマンド実行者
-     */
-    private void recordLogInvokedCommand(Command command, User author) {
-        this.logger.info("Command invoked: " + command.toString() + " invoked by " + author.getName());
     }
 
 }
