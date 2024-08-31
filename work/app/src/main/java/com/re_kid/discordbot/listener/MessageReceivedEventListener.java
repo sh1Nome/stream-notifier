@@ -45,7 +45,19 @@ public class MessageReceivedEventListener extends EventListener {
         Optional.ofNullable(event).filter(e -> !e.getAuthor().isBot())
                 .filter(e -> help.equals(new Command(e.getMessage(), prefixDefinition))).ifPresent(e -> {
                     this.recordLogInvokedCommand(help, e.getAuthor());
-                    e.getChannel().sendMessage("sn!helpテスト").queue();
+                    e.getChannel().sendMessage("""
+                            Command: `/sn-regist [OPTION] [ACCOUNT]`
+                            Description: Register your account to StreamNotifier
+                            Options:
+                                `--youtube`: YouTube Account
+                                `--twitch`: Twitch Account
+
+                            Command: `/sn-unregist [OPTION]`
+                            Description: Unregister your account to StreamNotifier
+                            Options:
+                                `--youtube`: YouTube Account
+                                `--twitch`: Twitch Account
+                            """).queue();
                 });
     }
 
