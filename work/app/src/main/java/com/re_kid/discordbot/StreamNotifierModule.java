@@ -88,9 +88,7 @@ public class StreamNotifierModule extends AbstractModule {
     /**
      * メッセージ受信イベントリスナーをDIに設定する
      * 
-     * @param help   helpコマンド
-     * @param logger ログオブジェクト
-     * 
+     * @param help helpコマンド
      * @return メッセージ受信イベントリスナー
      */
     @Provides
@@ -114,6 +112,7 @@ public class StreamNotifierModule extends AbstractModule {
      * helpコマンドをDIに登録する
      * 
      * @param prefix コマンドの接頭辞
+     * @param logger ログオブジェクト
      * @return helpコマンド
      */
     @Provides
