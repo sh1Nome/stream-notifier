@@ -13,7 +13,7 @@
                 "editor.renderWhitespace": "all",
                 "redhat.telemetry.enabled": false,
                 "editor.formatOnSave": true,
-                "java.debug.settings.hotCodeReplace": "auto"
+                "java.debug.settings.hotCodeReplace": "never"
             },
             "extensions": [
                 "vscjava.vscode-gradle",

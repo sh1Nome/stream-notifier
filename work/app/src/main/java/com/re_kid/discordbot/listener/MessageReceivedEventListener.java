@@ -56,7 +56,7 @@ public class MessageReceivedEventListener extends EventListener {
      * @param author  コマンド実行者
      */
     private void recordLogInvokedCommand(Command command, User author) {
-        this.logger.info(String.format("Command invoked: %s invoked by %s", command.toString(), author.getName()));
+        this.logger.info("Command invoked: " + command.toString() + " invoked by " + author.getName());
     }
 
 }
