@@ -1,9 +1,13 @@
 package com.re_kid.discordbot.command;
 
+import java.util.Optional;
+import java.util.function.Consumer;
+
 import org.slf4j.Logger;
 
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 /**
  * コマンドの親クラス
@@ -47,7 +51,7 @@ public class Command {
      * @param command 確かめるコマンド
      * @return 等しければtrue
      */
-    public boolean equals(Command command) {
+    private boolean equals(Command command) {
         if (this.illegal) {
             return false;
         }
@@ -55,12 +59,63 @@ public class Command {
     }
 
     /**
+     * 違反コマンドか調べる
+     * 
+     * @return 違反ならtrue
+     */
+    private boolean isIllegal() {
+        return this.illegal;
+    }
+
+    /**
+     * コマンドを実行する
+     * 
+     * @param event  メッセージ受信イベント
+     * @param action 継承時に定義する非干渉アクション
+     */
+    protected void invoke(MessageReceivedEvent event, Consumer<MessageReceivedEvent> action) {
+        this.validate(event).ifPresent(e -> {
+            this.recordLogInvokedCommand(e.getAuthor());
+            action.accept(event);
+        });
+    }
+
+    /**
+     * コマンドが実行可能か判断する
+     * 
+     * @param event メッセージ受信イベント
+     * 
+     * @return 実行可能ならメッセージ受信イベントのOptional、実行不可なら空のOptional
+     */
+    private Optional<MessageReceivedEvent> validate(MessageReceivedEvent event) {
+        return Optional.ofNullable(event).filter(e -> !e.getAuthor().isBot())
+                .map(e -> new Command(event.getMessage(), this.prefix))
+                .filter(generatedCommandFromMessage -> !generatedCommandFromMessage.isIllegal())
+                .filter(generatedCommandFromMessage -> generatedCommandFromMessage.equals(this))
+                .map(c -> event);
+    }
+
+    /**
      * コマンドの実行ログを記録する
      * 
      * @param author コマンド実行者
      */
-    public void recordLogInvokedCommand(User author) {
+    private void recordLogInvokedCommand(User author) {
         this.logger.info("Command invoked: " + this.toString() + " invoked by " + author.getName());
+    }
+
+    /**
+     * コマンドの成功ログを記録する
+     */
+    protected void recordLogSuccessfulCommand() {
+        this.logger.info("Command Successful!");
+    }
+
+    /**
+     * コマンドの失敗ログを記録する
+     */
+    protected void recordLogFailedCommand() {
+        this.logger.info("Command Failed!");
     }
 
 }

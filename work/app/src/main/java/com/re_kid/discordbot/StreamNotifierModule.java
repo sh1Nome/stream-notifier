@@ -95,8 +95,8 @@ public class StreamNotifierModule extends AbstractModule {
      */
     @Provides
     @Singleton
-    public MessageReceivedEventListener provideMessageReceivedEventListener(Prefix prefix, Help help) {
-        return new MessageReceivedEventListener(MessageReceivedEvent.class, prefix, help);
+    public MessageReceivedEventListener provideMessageReceivedEventListener(Help help) {
+        return new MessageReceivedEventListener(MessageReceivedEvent.class, help);
     }
 
     /**
