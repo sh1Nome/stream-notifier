@@ -24,14 +24,14 @@ public class Help extends Command {
                     Command: `/sn-regist [OPTION] [ACCOUNT]`
                     Description: Register your account to StreamNotifier
                     Options:
-                    `--youtube`: YouTube Account
-                    `--twitch`: Twitch Account
+                        `--youtube`: YouTube Account
+                        `--twitch`: Twitch Account
 
                     Command: `/sn-unregist [OPTION]`
                     Description: Unregister your account to StreamNotifier
                     Options:
-                    `--youtube`: YouTube Account
-                    `--twitch`: Twitch Account
+                        `--youtube`: YouTube Account
+                        `--twitch`: Twitch Account
                     """).queue(message -> super.recordLogSuccessfulCommand(), error -> super.recordLogFailedCommand());
         });
     }
