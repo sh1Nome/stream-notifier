@@ -21,6 +21,8 @@ public class Help extends Command {
     public void invoke(MessageReceivedEvent event) {
         super.invoke(event, e -> {
             e.getChannel().sendMessage("""
+                    This bot sends notifications for streams.
+
                     Command: `/sn-regist [OPTION] [ACCOUNT]`
                     Description: Register your account to StreamNotifier
                     Options:
