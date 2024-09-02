@@ -1,0 +1,24 @@
+{
+    "name": "StreamNotifierDev",
+    "dockerComposeFile": "../docker-compose.yml",
+    "service": "jdk",
+    "workspaceFolder": "/home/work",
+    "shutdownAction": "none",
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "terminal.integrated.defaultProfile.linux": "bash",
+                "terminal.integrated.mouseWheelScrollSensitivity": 0.3,
+                "java.jdt.ls.java.home": "/opt/java/openjdk",
+                "editor.renderWhitespace": "all",
+                "redhat.telemetry.enabled": false,
+                "editor.formatOnSave": true,
+                "java.debug.settings.hotCodeReplace": "never"
+            },
+            "extensions": [
+                "vscjava.vscode-gradle",
+                "vscjava.vscode-java-pack"
+            ]
+        }
+    }
+}
