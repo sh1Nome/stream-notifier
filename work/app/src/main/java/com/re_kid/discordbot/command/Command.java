@@ -1,7 +1,7 @@
 package com.re_kid.discordbot.command;
 
 import java.util.Optional;
-import java.util.function.Consumer;
+import java.util.function.Function;
 
 import org.slf4j.Logger;
 
@@ -16,13 +16,13 @@ public class Command {
 
     protected Prefix prefix;
     protected String value;
-    protected boolean illegal;
+    protected CommandStatus commandStatus;
     protected Logger logger;
 
-    public Command(Prefix prefix, String value, boolean illegal, Logger logger) {
+    public Command(Prefix prefix, String value, CommandStatus commandStatus, Logger logger) {
         this.prefix = prefix;
         this.value = value;
-        this.illegal = illegal;
+        this.commandStatus = commandStatus;
         this.logger = logger;
     }
 
@@ -31,15 +31,15 @@ public class Command {
         if (2 == command.length) {
             this.prefix = new Prefix(command[0], prefixDefinition.getSeparator());
             this.value = command[1];
-            this.illegal = false;
+            this.commandStatus = new CommandStatus(false);
         } else {
-            this.illegal = true;
+            this.commandStatus = new CommandStatus(true);
         }
     }
 
     @Override
     public String toString() {
-        if (this.illegal) {
+        if (this.commandStatus.isIllegal()) {
             return "";
         }
         return this.prefix.toString() + this.value;
@@ -52,31 +52,22 @@ public class Command {
      * @return 等しければtrue
      */
     private boolean equals(Command command) {
-        if (this.illegal) {
+        if (this.commandStatus.isIllegal()) {
             return false;
         }
         return this.toString().equals(command.toString());
     }
 
     /**
-     * 違反コマンドか調べる
-     * 
-     * @return 違反ならtrue
-     */
-    private boolean isIllegal() {
-        return this.illegal;
-    }
-
-    /**
      * コマンドを実行する
      * 
      * @param event  メッセージ受信イベント
-     * @param action 継承時に定義する非干渉アクション
+     * @param action 継承時に定義する干渉アクション
      */
-    protected void invoke(MessageReceivedEvent event, Consumer<MessageReceivedEvent> action) {
+    protected void invoke(MessageReceivedEvent event, Function<MessageReceivedEvent, CommandStatus> action) {
         this.validate(event).ifPresent(e -> {
             this.recordLogInvokedCommand(e.getAuthor());
-            action.accept(event);
+            this.recordLogResultCommand(action.apply(e));
         });
     }
 
@@ -90,7 +81,7 @@ public class Command {
     private Optional<MessageReceivedEvent> validate(MessageReceivedEvent event) {
         return Optional.ofNullable(event).filter(e -> !e.getAuthor().isBot())
                 .map(e -> new Command(event.getMessage(), this.prefix))
-                .filter(generatedCommandFromMessage -> !generatedCommandFromMessage.isIllegal())
+                .filter(generatedCommandFromMessage -> !generatedCommandFromMessage.commandStatus.isIllegal())
                 .filter(generatedCommandFromMessage -> generatedCommandFromMessage.equals(this))
                 .map(c -> event);
     }
@@ -105,16 +96,29 @@ public class Command {
     }
 
     /**
+     * コマンドの実行結果ログを記録する
+     * 
+     * @param commandStatus コマンドの状態
+     */
+    private void recordLogResultCommand(CommandStatus commandStatus) {
+        if (commandStatus.isIllegal()) {
+            this.recordLogFailedCommand();
+            return;
+        }
+        this.recordLogSuccessfulCommand();
+    }
+
+    /**
      * コマンドの成功ログを記録する
      */
-    protected void recordLogSuccessfulCommand() {
+    private void recordLogSuccessfulCommand() {
         this.logger.info("Command Successful!");
     }
 
     /**
      * コマンドの失敗ログを記録する
      */
-    protected void recordLogFailedCommand() {
+    private void recordLogFailedCommand() {
         this.logger.info("Command Failed!");
     }
 
