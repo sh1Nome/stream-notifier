@@ -9,8 +9,8 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
  */
 public class Help extends Command {
 
-    public Help(Prefix prefix, String value, boolean illegal, Logger logger) {
-        super(prefix, value, illegal, logger);
+    public Help(Prefix prefix, String value, CommandStatus commandStatus, Logger logger) {
+        super(prefix, value, commandStatus, logger);
     }
 
     /**
@@ -34,7 +34,8 @@ public class Help extends Command {
                     Options:
                         `--youtube`: YouTube Account
                         `--twitch`: Twitch Account
-                    """).queue(message -> super.recordLogSuccessfulCommand(), error -> super.recordLogFailedCommand());
+                    """).queue(null, error -> this.commandStatus.markAsIllegal());
+            return this.commandStatus;
         });
     }
 

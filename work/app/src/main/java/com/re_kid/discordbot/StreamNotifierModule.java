@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
+import com.re_kid.discordbot.command.CommandStatus;
 import com.re_kid.discordbot.command.Help;
 import com.re_kid.discordbot.command.Prefix;
 import com.re_kid.discordbot.listener.MessageReceivedEventListener;
@@ -121,7 +122,7 @@ public class StreamNotifierModule extends AbstractModule {
     @Provides
     @Singleton
     public Help provideHelp(Prefix prefix, Logger logger) {
-        return new Help(prefix, "help", false, logger);
+        return new Help(prefix, "help", new CommandStatus(false), logger);
     }
 
 }
