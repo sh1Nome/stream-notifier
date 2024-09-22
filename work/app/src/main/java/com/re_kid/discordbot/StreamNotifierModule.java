@@ -10,6 +10,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.re_kid.discordbot.command.CommandStatus;
 import com.re_kid.discordbot.command.Help;
+import com.re_kid.discordbot.command.Lang;
 import com.re_kid.discordbot.command.Prefix;
 import com.re_kid.discordbot.listener.MessageReceivedEventListener;
 import com.re_kid.discordbot.listener.StreamNotifierEventListener;
@@ -97,8 +98,8 @@ public class StreamNotifierModule extends AbstractModule {
      */
     @Provides
     @Singleton
-    public MessageReceivedEventListener provideMessageReceivedEventListener(Help help) {
-        return new MessageReceivedEventListener(MessageReceivedEvent.class, help);
+    public MessageReceivedEventListener provideMessageReceivedEventListener(Help help, Lang lang) {
+        return new MessageReceivedEventListener(MessageReceivedEvent.class, help, lang);
     }
 
     /**
@@ -123,6 +124,12 @@ public class StreamNotifierModule extends AbstractModule {
     @Singleton
     public Help provideHelp(Prefix prefix, Logger logger) {
         return new Help(prefix, "help", new CommandStatus(false), logger);
+    }
+
+    @Provides
+    @Singleton
+    public Lang provideLang(Prefix prefix, Logger logger) {
+        return new Lang(prefix, "lang", new CommandStatus(false), logger);
     }
 
 }
