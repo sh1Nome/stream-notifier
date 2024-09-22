@@ -9,14 +9,20 @@
 ## アカウント登録
 * `/sn-regist [OPTION] [ACCOUNT]`
     * OPTION
-        * youtube
-        * twitch
+        * `--youtube`
+        * `--twitch`
 
 ## アカウント登録解除
 * `/sn-unregist [OPTION]`
     * OPTION
-        * youtube
-        * twitch
+        * `--youtube`
+        * `--twitch`
+
+## 言語設定
+* `/sn-lang [OPTION]`
+    * OPTION
+        * `--ja`
+        * `--en`
 
 ## ヘルプ
 * `/sn-help`
