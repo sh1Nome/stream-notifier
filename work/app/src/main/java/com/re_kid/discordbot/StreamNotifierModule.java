@@ -1,8 +1,13 @@
 package com.re_kid.discordbot;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Properties;
 
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,6 +42,33 @@ public class StreamNotifierModule extends AbstractModule {
     @Singleton
     public Logger provideLogger() {
         return LoggerFactory.getLogger(StreamNotifier.class);
+    }
+
+    /**
+     * データベース接続情報を取得する
+     * 
+     * @return データベース接続情報
+     */
+    private Properties getDbConnectInfo() {
+        Properties prop = new Properties();
+        prop.put("driver", "org.postgresql.Driver");
+        prop.put("url", "jdbc:postgresql://db:5432/" + System.getenv("POSTGRES_DB"));
+        prop.put("username", System.getenv("POSTGRES_USER"));
+        prop.put("password", System.getenv("POSTGRES_PASSWORD"));
+        return prop;
+    }
+
+    /**
+     * Mybatisで利用するSqlSessionFactoryをDIに設定する
+     * 
+     * @return SqlSessionFactory
+     * @throws IOException
+     */
+    @Provides
+    @Singleton
+    public SqlSessionFactory provideSqlSessionFactory() throws IOException {
+        return new SqlSessionFactoryBuilder().build(Resources.getResourceAsStream("mybatis-config.xml"),
+                this.getDbConnectInfo());
     }
 
     /**
