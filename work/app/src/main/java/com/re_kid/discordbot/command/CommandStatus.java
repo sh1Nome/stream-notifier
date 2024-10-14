@@ -5,33 +5,33 @@ package com.re_kid.discordbot.command;
  */
 public class CommandStatus {
 
-    private boolean illegal;
+    private boolean failed;
 
-    public CommandStatus(boolean illegal) {
-        this.illegal = illegal;
+    public CommandStatus(boolean failed) {
+        this.failed = failed;
     }
 
     /**
-     * コマンドが違反かどうか確かめる
+     * コマンドが失敗状態かどうか確かめる
      * 
-     * @return 違反ならtrue
+     * @return 失敗状態ならtrue
      */
-    public boolean isIllegal() {
-        return this.illegal;
+    public boolean isFailed() {
+        return this.failed;
     }
 
     /**
-     * 非違反コマンドに設定する
+     * 非失敗状態コマンドに設定する
      */
-    public void markAsNoIllegal() {
-        this.illegal = false;
+    public void markAsNoFailed() {
+        this.failed = false;
     }
 
     /**
-     * 違反コマンドに設定する
+     * 失敗状態コマンドに設定する
      */
-    public void markAsIllegal() {
-        this.illegal = true;
+    public void markAsFailed() {
+        this.failed = true;
     }
 
 }

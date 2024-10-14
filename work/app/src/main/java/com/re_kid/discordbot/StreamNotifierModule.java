@@ -3,7 +3,6 @@ package com.re_kid.discordbot;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Properties;
 
 import org.apache.ibatis.io.Resources;
@@ -15,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.re_kid.discordbot.command.CommandStatus;
-import com.re_kid.discordbot.command.Option;
 import com.re_kid.discordbot.command.Prefix;
 import com.re_kid.discordbot.command.help.Help;
 import com.re_kid.discordbot.command.lang.Lang;

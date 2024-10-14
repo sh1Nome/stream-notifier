@@ -43,9 +43,6 @@ public class Command {
 
     @Override
     public String toString() {
-        if (this.commandStatus.isIllegal()) {
-            return "";
-        }
         return this.prefix.toString() + this.value;
     }
 
@@ -56,9 +53,6 @@ public class Command {
      * @return 等しければtrue
      */
     private boolean equals(Command command) {
-        if (this.commandStatus.isIllegal()) {
-            return false;
-        }
         return this.toString().equals(command.toString());
     }
 
@@ -85,7 +79,6 @@ public class Command {
     private Optional<MessageReceivedEvent> validate(MessageReceivedEvent event) {
         return Optional.ofNullable(event).filter(e -> !e.getAuthor().isBot())
                 .map(e -> new Command(event.getMessage(), this.prefix))
-                .filter(generatedCommandFromMessage -> !generatedCommandFromMessage.commandStatus.isIllegal())
                 .filter(generatedCommandFromMessage -> generatedCommandFromMessage.equals(this))
                 .map(c -> event);
     }
@@ -105,7 +98,7 @@ public class Command {
      * @param commandStatus コマンドの状態
      */
     private void recordLogResultCommand(CommandStatus commandStatus) {
-        if (commandStatus.isIllegal()) {
+        if (commandStatus.isFailed()) {
             this.recordLogFailedCommand();
             return;
         }
@@ -123,7 +116,7 @@ public class Command {
      * コマンドの失敗ログを記録する
      */
     private void recordLogFailedCommand() {
-        this.logger.info("Command Failed!");
+        this.logger.warn("Command Failed!");
     }
 
 }
