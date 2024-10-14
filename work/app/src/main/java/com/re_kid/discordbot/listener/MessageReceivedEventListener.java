@@ -1,7 +1,7 @@
 package com.re_kid.discordbot.listener;
 
-import com.re_kid.discordbot.command.Help;
-import com.re_kid.discordbot.command.Lang;
+import com.re_kid.discordbot.command.help.Help;
+import com.re_kid.discordbot.command.lang.Lang;
 
 import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;

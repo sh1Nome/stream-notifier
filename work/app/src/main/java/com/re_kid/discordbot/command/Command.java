@@ -28,6 +28,7 @@ public class Command {
 
     public Command(Message message, Prefix prefixDefinition) {
         String[] command = message.getContentRaw().split(prefixDefinition.getSeparator());
+        command[1] = command[1].split(" ")[0];
         if (2 == command.length) {
             this.prefix = new Prefix(command[0], prefixDefinition.getSeparator());
             this.value = command[1];

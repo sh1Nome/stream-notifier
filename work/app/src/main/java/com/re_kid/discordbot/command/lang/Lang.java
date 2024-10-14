@@ -1,6 +1,10 @@
-package com.re_kid.discordbot.command;
+package com.re_kid.discordbot.command.lang;
 
 import org.slf4j.Logger;
+
+import com.re_kid.discordbot.command.Command;
+import com.re_kid.discordbot.command.CommandStatus;
+import com.re_kid.discordbot.command.Prefix;
 
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 

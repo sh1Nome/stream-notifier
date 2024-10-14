@@ -14,9 +14,9 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.re_kid.discordbot.command.CommandStatus;
-import com.re_kid.discordbot.command.Help;
-import com.re_kid.discordbot.command.Lang;
 import com.re_kid.discordbot.command.Prefix;
+import com.re_kid.discordbot.command.help.Help;
+import com.re_kid.discordbot.command.lang.Lang;
 import com.re_kid.discordbot.listener.MessageReceivedEventListener;
 import com.re_kid.discordbot.listener.StreamNotifierEventListener;
 
@@ -158,6 +158,13 @@ public class StreamNotifierModule extends AbstractModule {
         return new Help(prefix, "help", new CommandStatus(false), logger);
     }
 
+    /**
+     * langコマンドをDIに設定する
+     * 
+     * @param prefix コマンドの接頭辞
+     * @param logger ログオブジェクト
+     * @return langコマンド
+     */
     @Provides
     @Singleton
     public Lang provideLang(Prefix prefix, Logger logger) {
