@@ -150,6 +150,11 @@ public class StreamNotifierModule extends AbstractModule {
     }
 
     /**
+     * コマンドオプションのセパレーター
+     */
+    private final String optionSeparator = "--";
+
+    /**
      * helpコマンドをDIに登録する
      * 
      * @param prefix コマンドの接頭辞
@@ -159,7 +164,7 @@ public class StreamNotifierModule extends AbstractModule {
     @Provides
     @Singleton
     public Help provideHelp(Prefix prefix, Logger logger) {
-        return new Help(prefix, "help", new CommandStatus(false), logger);
+        return new Help(prefix, "help", new CommandStatus(false), this.optionSeparator, logger);
     }
 
     /**
@@ -195,7 +200,7 @@ public class StreamNotifierModule extends AbstractModule {
     @Singleton
     public Lang provideLang(Prefix prefix, En en, Ja ja, Logger logger) {
         List<Option> options = List.of(en, ja);
-        return new Lang(prefix, "lang", new CommandStatus(false), options, logger);
+        return new Lang(prefix, "lang", new CommandStatus(false), options, this.optionSeparator, logger);
     }
 
 }

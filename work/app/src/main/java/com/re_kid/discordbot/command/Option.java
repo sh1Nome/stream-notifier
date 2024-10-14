@@ -7,7 +7,6 @@ import com.google.common.base.Strings;
  */
 public class Option {
 
-    private final String separator = "--";
     private final String value;
 
     public Option(String value) {
@@ -22,10 +21,6 @@ public class Option {
      */
     public boolean equals(Option option) {
         return this.getValue().equals(option.getValue()) ? true : false;
-    }
-
-    public String getSeparator() {
-        return separator;
     }
 
     private String getValue() {

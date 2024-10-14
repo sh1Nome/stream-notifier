@@ -13,8 +13,9 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class Lang extends Command {
 
-    public Lang(Prefix prefix, String value, CommandStatus commandStatus, List<Option> options, Logger logger) {
-        super(prefix, value, commandStatus, options, logger);
+    public Lang(Prefix prefix, String value, CommandStatus commandStatus, List<Option> options, String optionSeparator,
+            Logger logger) {
+        super(prefix, value, commandStatus, optionSeparator, options, logger);
     }
 
     public void invoke(MessageReceivedEvent event) {

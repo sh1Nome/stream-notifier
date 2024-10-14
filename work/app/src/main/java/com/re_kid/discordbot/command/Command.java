@@ -17,14 +17,17 @@ public class Command {
 
     protected Prefix prefix;
     protected String value;
-    protected CommandStatus commandStatus;
+    protected final CommandStatus commandStatus;
+    protected String optionSeparator;
     protected List<Option> options;
     protected Logger logger;
 
-    public Command(Prefix prefix, String value, CommandStatus commandStatus, List<Option> options, Logger logger) {
+    public Command(Prefix prefix, String value, CommandStatus commandStatus, String optionSeparator,
+            List<Option> options, Logger logger) {
         this.prefix = prefix;
         this.value = value;
         this.commandStatus = commandStatus;
+        this.optionSeparator = optionSeparator;
         this.options = options;
         this.logger = logger;
     }
