@@ -38,7 +38,8 @@ public class Help extends Command {
                     Options:
                         `--youtube`: YouTube Account
                         `--twitch`: Twitch Account
-                    """).queue(null, error -> this.commandStatus.markAsIllegal());
+                    """).queue(success -> this.commandStatus.markAsNoIllegal(),
+                    error -> this.commandStatus.markAsIllegal());
             return this.commandStatus;
         });
     }

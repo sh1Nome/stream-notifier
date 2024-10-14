@@ -21,6 +21,13 @@ public class CommandStatus {
     }
 
     /**
+     * 非違反コマンドに設定する
+     */
+    public void markAsNoIllegal() {
+        this.illegal = false;
+    }
+
+    /**
      * 違反コマンドに設定する
      */
     public void markAsIllegal() {
