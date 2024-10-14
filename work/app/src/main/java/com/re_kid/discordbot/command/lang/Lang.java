@@ -12,6 +12,7 @@ import com.re_kid.discordbot.command.lang.option.En;
 import com.re_kid.discordbot.command.lang.option.Ja;
 
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
 
 public class Lang extends Command {
 
@@ -29,41 +30,44 @@ public class Lang extends Command {
         super.invoke(event, e -> {
             Arrays.asList(event.getMessage().getContentRaw().split(" ")).stream()
                     .filter(splitMessage -> splitMessage.startsWith(this.optionSeparator))
-                    .map(optionMessage -> new Option(optionMessage))
+                    .map(optionMessage -> new Option(optionMessage.replace(this.optionSeparator, "")))
                     .filter(generatedOptionFromMessage -> {
-                        this.logger.info(String.valueOf(en.equals(generatedOptionFromMessage)));
-                        this.logger.info(String.valueOf(ja.equals(generatedOptionFromMessage)));
                         return en.equals(generatedOptionFromMessage)
                                 || ja.equals(generatedOptionFromMessage);
                     })
                     .findFirst()
-                    .ifPresentOrElse(scheduledOption -> this.executeOption(scheduledOption, e),
-                            () -> this.commandStatus.markAsFailed());
-            return this.commandStatus;
+                    .ifPresentOrElse(
+                            scheduledOption -> this.executeOption(scheduledOption, e).queue(
+                                    success -> {
+                                        this.changeStatusToNoFailedAndRecordLogResult();
+                                    },
+                                    error -> {
+                                        this.changeStatusToFailedAndRecordLogResult();
+                                    }),
+                            () -> {
+                                this.changeStatusToFailedAndRecordLogResult();
+                            });
         });
     }
 
-    private void executeOption(Option scheduledOption, MessageReceivedEvent event) {
+    private MessageCreateAction executeOption(Option scheduledOption, MessageReceivedEvent event) {
         if (en.equals(scheduledOption)) {
-            executeEnOption(event);
-        }
-        if (ja.equals(scheduledOption)) {
-            executeJaOption(event);
+            return executeEnOption(event);
+        } else {
+            return executeJaOption(event);
         }
     }
 
-    private void executeEnOption(MessageReceivedEvent event) {
-        event.getChannel().sendMessage("""
-                test ja
-                """).queue(success -> this.commandStatus.markAsNoFailed(),
-                error -> this.commandStatus.markAsFailed());
-    }
-
-    private void executeJaOption(MessageReceivedEvent event) {
-        event.getChannel().sendMessage("""
+    private MessageCreateAction executeEnOption(MessageReceivedEvent event) {
+        return event.getChannel().sendMessage("""
                 test en
-                """).queue(success -> this.commandStatus.markAsNoFailed(),
-                error -> this.commandStatus.markAsFailed());
+                """);
+    }
+
+    private MessageCreateAction executeJaOption(MessageReceivedEvent event) {
+        return event.getChannel().sendMessage("""
+                test ja
+                """);
     }
 
 }

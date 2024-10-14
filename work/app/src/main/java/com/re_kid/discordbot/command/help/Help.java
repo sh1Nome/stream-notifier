@@ -38,9 +38,12 @@ public class Help extends Command {
                     Options:
                         `--youtube`: YouTube Account
                         `--twitch`: Twitch Account
-                    """).queue(success -> this.commandStatus.markAsNoFailed(),
-                    error -> this.commandStatus.markAsFailed());
-            return this.commandStatus;
+                    """).queue(success -> {
+                this.changeStatusToNoFailedAndRecordLogResult();
+            },
+                    error -> {
+                        this.changeStatusToFailedAndRecordLogResult();
+                    });
         });
     }
 

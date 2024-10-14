@@ -1,7 +1,7 @@
 package com.re_kid.discordbot.command;
 
 import java.util.Optional;
-import java.util.function.Function;
+import java.util.function.Consumer;
 
 import org.slf4j.Logger;
 
@@ -62,10 +62,10 @@ public class Command {
      * @param event  メッセージ受信イベント
      * @param action 継承時に定義する干渉アクション
      */
-    protected void invoke(MessageReceivedEvent event, Function<MessageReceivedEvent, CommandStatus> action) {
+    protected void invoke(MessageReceivedEvent event, Consumer<MessageReceivedEvent> action) {
         this.validate(event).ifPresent(e -> {
             this.recordLogInvokedCommand(e.getAuthor());
-            this.recordLogResultCommand(action.apply(e));
+            action.accept(e);
         });
     }
 
@@ -93,12 +93,28 @@ public class Command {
     }
 
     /**
+     * コマンドを失敗状態に変更し、実行ログを記録する
+     */
+    protected void changeStatusToFailedAndRecordLogResult() {
+        this.commandStatus.markAsFailed();
+        this.recordLogResultCommand();
+    }
+
+    /**
+     * コマンドを非失敗状態に変更し、実行ログを記録する
+     */
+    protected void changeStatusToNoFailedAndRecordLogResult() {
+        this.commandStatus.markAsNoFailed();
+        this.recordLogResultCommand();
+    }
+
+    /**
      * コマンドの実行結果ログを記録する
      * 
      * @param commandStatus コマンドの状態
      */
-    private void recordLogResultCommand(CommandStatus commandStatus) {
-        if (commandStatus.isFailed()) {
+    private void recordLogResultCommand() {
+        if (this.commandStatus.isFailed()) {
             this.recordLogFailedCommand();
             return;
         }
