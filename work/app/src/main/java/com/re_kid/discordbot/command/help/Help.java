@@ -14,7 +14,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 public class Help extends Command {
 
     public Help(Prefix prefix, String value, CommandStatus commandStatus, String optionSeparator, Logger logger) {
-        super(prefix, value, commandStatus, optionSeparator, null, logger);
+        super(prefix, value, commandStatus, optionSeparator, logger);
     }
 
     /**

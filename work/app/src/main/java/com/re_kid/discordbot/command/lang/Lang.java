@@ -1,21 +1,25 @@
 package com.re_kid.discordbot.command.lang;
 
-import java.util.List;
-
 import org.slf4j.Logger;
 
 import com.re_kid.discordbot.command.Command;
 import com.re_kid.discordbot.command.CommandStatus;
-import com.re_kid.discordbot.command.Option;
 import com.re_kid.discordbot.command.Prefix;
+import com.re_kid.discordbot.command.lang.option.En;
+import com.re_kid.discordbot.command.lang.option.Ja;
 
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class Lang extends Command {
 
-    public Lang(Prefix prefix, String value, CommandStatus commandStatus, List<Option> options, String optionSeparator,
+    private final En en;
+    private final Ja ja;
+
+    public Lang(Prefix prefix, String value, CommandStatus commandStatus, String optionSeparator, En en, Ja ja,
             Logger logger) {
-        super(prefix, value, commandStatus, optionSeparator, options, logger);
+        super(prefix, value, commandStatus, optionSeparator, logger);
+        this.en = en;
+        this.ja = ja;
     }
 
     public void invoke(MessageReceivedEvent event) {
