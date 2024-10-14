@@ -3,6 +3,7 @@ package com.re_kid.discordbot;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Properties;
 
 import org.apache.ibatis.io.Resources;
@@ -14,9 +15,12 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.re_kid.discordbot.command.CommandStatus;
+import com.re_kid.discordbot.command.Option;
 import com.re_kid.discordbot.command.Prefix;
 import com.re_kid.discordbot.command.help.Help;
 import com.re_kid.discordbot.command.lang.Lang;
+import com.re_kid.discordbot.command.lang.option.En;
+import com.re_kid.discordbot.command.lang.option.Ja;
 import com.re_kid.discordbot.listener.MessageReceivedEventListener;
 import com.re_kid.discordbot.listener.StreamNotifierEventListener;
 
@@ -159,6 +163,28 @@ public class StreamNotifierModule extends AbstractModule {
     }
 
     /**
+     * langコマンドのenオプションをDIに設定する
+     * 
+     * @return langコマンドのenオプション
+     */
+    @Provides
+    @Singleton
+    public En provideEn() {
+        return new En("en");
+    }
+
+    /**
+     * langコマンドのjaオプションをDIに設定する
+     * 
+     * @return langコマンドのjaオプション
+     */
+    @Provides
+    @Singleton
+    public Ja provideJa() {
+        return new Ja("ja");
+    }
+
+    /**
      * langコマンドをDIに設定する
      * 
      * @param prefix コマンドの接頭辞
@@ -167,8 +193,9 @@ public class StreamNotifierModule extends AbstractModule {
      */
     @Provides
     @Singleton
-    public Lang provideLang(Prefix prefix, Logger logger) {
-        return new Lang(prefix, "lang", new CommandStatus(false), logger);
+    public Lang provideLang(Prefix prefix, En en, Ja ja, Logger logger) {
+        List<Option> options = List.of(en, ja);
+        return new Lang(prefix, "lang", new CommandStatus(false), options, logger);
     }
 
 }

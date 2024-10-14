@@ -1,5 +1,6 @@
 package com.re_kid.discordbot.command;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -17,12 +18,14 @@ public class Command {
     protected Prefix prefix;
     protected String value;
     protected CommandStatus commandStatus;
+    protected List<Option> options;
     protected Logger logger;
 
-    public Command(Prefix prefix, String value, CommandStatus commandStatus, Logger logger) {
+    public Command(Prefix prefix, String value, CommandStatus commandStatus, List<Option> options, Logger logger) {
         this.prefix = prefix;
         this.value = value;
         this.commandStatus = commandStatus;
+        this.options = options;
         this.logger = logger;
     }
 
