@@ -6,4 +6,5 @@ public interface SystemSettingMapper {
 
     SystemSetting selectById(String id);
 
+    boolean updateSystemSetting(SystemSetting systemSetting);
 }

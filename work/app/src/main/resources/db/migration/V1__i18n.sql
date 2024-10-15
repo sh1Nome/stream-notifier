@@ -5,6 +5,6 @@ CREATE TABLE system_setting (
 );
 
 INSERT INTO system_setting (id, value) VALUES (
-    'language',
+    'lang',
     'en'
 );

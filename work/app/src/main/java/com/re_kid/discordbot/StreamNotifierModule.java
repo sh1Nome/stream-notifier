@@ -196,8 +196,9 @@ public class StreamNotifierModule extends AbstractModule {
      */
     @Provides
     @Singleton
-    public Lang provideLang(Prefix prefix, En en, Ja ja, Logger logger) {
-        return new Lang(prefix, "lang", new CommandStatus(false), this.optionSeparator, en, ja, logger);
+    public Lang provideLang(Prefix prefix, En en, Ja ja, SqlSessionFactory sqlSessionFactory, Logger logger) {
+        return new Lang(prefix, "lang", new CommandStatus(false), this.optionSeparator, en, ja, sqlSessionFactory,
+                logger);
     }
 
 }

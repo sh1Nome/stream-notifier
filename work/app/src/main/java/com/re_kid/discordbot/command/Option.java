@@ -23,7 +23,7 @@ public class Option {
         return this.getValue().equals(option.getValue()) ? true : false;
     }
 
-    private String getValue() {
+    public String getValue() {
         return value;
     }
 
