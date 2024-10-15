@@ -10,3 +10,4 @@ build
 .vscode-server
 .bash_history
 .vscode/settings.json
+.lemminx
