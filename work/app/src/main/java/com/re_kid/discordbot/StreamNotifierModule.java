@@ -54,7 +54,9 @@ public class StreamNotifierModule extends AbstractModule {
     private Properties getDbConnectInfo() {
         Properties prop = new Properties();
         prop.put("driver", "org.postgresql.Driver");
-        prop.put("url", "jdbc:postgresql://db:5432/" + System.getenv("POSTGRES_DB"));
+        prop.put("url",
+                "jdbc:postgresql://" + System.getenv("POSTGRES_HOST") + ":" + System.getenv("POSTGRES_PORT") + "/"
+                        + System.getenv("POSTGRES_DB"));
         prop.put("username", System.getenv("POSTGRES_USER"));
         prop.put("password", System.getenv("POSTGRES_PASSWORD"));
         return prop;
