@@ -24,14 +24,12 @@ public class Lang extends Command {
 
     private final En en;
     private final Ja ja;
-    private final SqlSessionFactory sqlSessionFactory;
 
     public Lang(Prefix prefix, String value, CommandStatus commandStatus, String optionSeparator, En en, Ja ja,
             SqlSessionFactory sqlSessionFactory, I18n i18n, Logger logger) {
-        super(prefix, value, commandStatus, optionSeparator, i18n, logger);
+        super(prefix, value, commandStatus, optionSeparator, i18n, sqlSessionFactory, logger);
         this.en = en;
         this.ja = ja;
-        this.sqlSessionFactory = sqlSessionFactory;
     }
 
     public void invoke(MessageReceivedEvent event) {

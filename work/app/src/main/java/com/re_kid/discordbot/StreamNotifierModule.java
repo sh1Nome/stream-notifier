@@ -174,8 +174,9 @@ public class StreamNotifierModule extends AbstractModule {
      */
     @Provides
     @Singleton
-    public Help provideHelp(Prefix prefix, I18n i18n, Logger logger) {
-        return new Help(prefix, "help", new CommandStatus(false), this.optionSeparator, i18n, logger);
+    public Help provideHelp(Prefix prefix, I18n i18n, SqlSessionFactory sqlSessionFactory, Logger logger) {
+        return new Help(prefix, "help", new CommandStatus(false), this.optionSeparator, i18n, sqlSessionFactory,
+                logger);
     }
 
     /**

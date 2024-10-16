@@ -3,6 +3,7 @@ package com.re_kid.discordbot.command;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.slf4j.Logger;
 
 import com.re_kid.discordbot.I18n;
@@ -21,15 +22,17 @@ public class Command {
     protected final CommandStatus commandStatus;
     protected String optionSeparator;
     protected I18n i18n;
+    protected SqlSessionFactory sqlSessionFactory;
     protected Logger logger;
 
     public Command(Prefix prefix, String value, CommandStatus commandStatus, String optionSeparator,
-            I18n i18n, Logger logger) {
+            I18n i18n, SqlSessionFactory sqlSessionFactory, Logger logger) {
         this.prefix = prefix;
         this.value = value;
         this.commandStatus = commandStatus;
         this.optionSeparator = optionSeparator;
         this.i18n = i18n;
+        this.sqlSessionFactory = sqlSessionFactory;
         this.logger = logger;
     }
 
