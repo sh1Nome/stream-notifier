@@ -5,6 +5,8 @@ import java.util.function.Consumer;
 
 import org.slf4j.Logger;
 
+import com.re_kid.discordbot.I18n;
+
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -18,14 +20,16 @@ public class Command {
     protected String value;
     protected final CommandStatus commandStatus;
     protected String optionSeparator;
+    protected I18n i18n;
     protected Logger logger;
 
     public Command(Prefix prefix, String value, CommandStatus commandStatus, String optionSeparator,
-            Logger logger) {
+            I18n i18n, Logger logger) {
         this.prefix = prefix;
         this.value = value;
         this.commandStatus = commandStatus;
         this.optionSeparator = optionSeparator;
+        this.i18n = i18n;
         this.logger = logger;
     }
 

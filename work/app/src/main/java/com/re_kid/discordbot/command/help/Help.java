@@ -1,7 +1,9 @@
 package com.re_kid.discordbot.command.help;
 
 import org.slf4j.Logger;
+import java.util.Locale;
 
+import com.re_kid.discordbot.I18n;
 import com.re_kid.discordbot.command.Command;
 import com.re_kid.discordbot.command.CommandStatus;
 import com.re_kid.discordbot.command.Prefix;
@@ -13,8 +15,9 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
  */
 public class Help extends Command {
 
-    public Help(Prefix prefix, String value, CommandStatus commandStatus, String optionSeparator, Logger logger) {
-        super(prefix, value, commandStatus, optionSeparator, logger);
+    public Help(Prefix prefix, String value, CommandStatus commandStatus, String optionSeparator, I18n i18n,
+            Logger logger) {
+        super(prefix, value, commandStatus, optionSeparator, i18n, logger);
     }
 
     /**
@@ -24,21 +27,7 @@ public class Help extends Command {
      */
     public void invoke(MessageReceivedEvent event) {
         super.invoke(event, e -> {
-            e.getChannel().sendMessage("""
-                    This bot sends notifications for streams.
-
-                    Command: `/sn-regist [OPTION] [ACCOUNT]`
-                    Description: Register your account to StreamNotifier
-                    Options:
-                        `--youtube`: YouTube Account
-                        `--twitch`: Twitch Account
-
-                    Command: `/sn-unregist [OPTION]`
-                    Description: Unregister your account to StreamNotifier
-                    Options:
-                        `--youtube`: YouTube Account
-                        `--twitch`: Twitch Account
-                    """).queue(success -> {
+            e.getChannel().sendMessage(this.i18n.getString(Locale.ENGLISH, "help.description")).queue(success -> {
                 this.changeStatusToNoFailedAndRecordLogResult();
             },
                     error -> {

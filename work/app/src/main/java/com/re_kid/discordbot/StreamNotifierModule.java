@@ -47,6 +47,17 @@ public class StreamNotifierModule extends AbstractModule {
     }
 
     /**
+     * i18nオブジェクトをDIに設定する
+     * 
+     * @return i18nオブジェクト
+     */
+    @Provides
+    @Singleton
+    public I18n provideI18n() {
+        return new I18n();
+    }
+
+    /**
      * データベース接続情報を取得する
      * 
      * @return データベース接続情報
@@ -163,8 +174,8 @@ public class StreamNotifierModule extends AbstractModule {
      */
     @Provides
     @Singleton
-    public Help provideHelp(Prefix prefix, Logger logger) {
-        return new Help(prefix, "help", new CommandStatus(false), this.optionSeparator, logger);
+    public Help provideHelp(Prefix prefix, I18n i18n, Logger logger) {
+        return new Help(prefix, "help", new CommandStatus(false), this.optionSeparator, i18n, logger);
     }
 
     /**
@@ -198,9 +209,10 @@ public class StreamNotifierModule extends AbstractModule {
      */
     @Provides
     @Singleton
-    public Lang provideLang(Prefix prefix, En en, Ja ja, SqlSessionFactory sqlSessionFactory, Logger logger) {
+    public Lang provideLang(Prefix prefix, En en, Ja ja, SqlSessionFactory sqlSessionFactory, I18n i18n,
+            Logger logger) {
         return new Lang(prefix, "lang", new CommandStatus(false), this.optionSeparator, en, ja, sqlSessionFactory,
-                logger);
+                i18n, logger);
     }
 
 }

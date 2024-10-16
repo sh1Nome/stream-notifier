@@ -1,11 +1,13 @@
 package com.re_kid.discordbot.command.lang;
 
 import java.util.Arrays;
+import java.util.Locale;
 
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.slf4j.Logger;
 
+import com.re_kid.discordbot.I18n;
 import com.re_kid.discordbot.command.Command;
 import com.re_kid.discordbot.command.CommandStatus;
 import com.re_kid.discordbot.command.Option;
@@ -25,8 +27,8 @@ public class Lang extends Command {
     private final SqlSessionFactory sqlSessionFactory;
 
     public Lang(Prefix prefix, String value, CommandStatus commandStatus, String optionSeparator, En en, Ja ja,
-            SqlSessionFactory sqlSessionFactory, Logger logger) {
-        super(prefix, value, commandStatus, optionSeparator, logger);
+            SqlSessionFactory sqlSessionFactory, I18n i18n, Logger logger) {
+        super(prefix, value, commandStatus, optionSeparator, i18n, logger);
         this.en = en;
         this.ja = ja;
         this.sqlSessionFactory = sqlSessionFactory;
@@ -69,11 +71,8 @@ public class Lang extends Command {
             SystemSettingMapper systemSettingMapper = sqlSession.getMapper(SystemSettingMapper.class);
             boolean success = systemSettingMapper.updateSystemSetting(new SystemSetting(this.value, en.getValue()));
             sqlSession.commit();
-            return success ? event.getChannel().sendMessage("""
-                    succeeded change setting.
-                    """) : event.getChannel().sendMessage("""
-                    failed change setting.
-                    """);
+            return success ? event.getChannel().sendMessage(this.i18n.getString(Locale.ENGLISH, "lang.succeeded"))
+                    : event.getChannel().sendMessage(this.i18n.getString("lang.failed"));
         }
     }
 
@@ -82,11 +81,8 @@ public class Lang extends Command {
             SystemSettingMapper systemSettingMapper = sqlSession.getMapper(SystemSettingMapper.class);
             boolean success = systemSettingMapper.updateSystemSetting(new SystemSetting(this.value, ja.getValue()));
             sqlSession.commit();
-            return success ? event.getChannel().sendMessage("""
-                    succeeded change setting.
-                    """) : event.getChannel().sendMessage("""
-                    failed change setting.
-                    """);
+            return success ? event.getChannel().sendMessage(this.i18n.getString(Locale.JAPANESE, "lang.succeeded"))
+                    : event.getChannel().sendMessage(this.i18n.getString("lang.failed"));
         }
     }
 
