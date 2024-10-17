@@ -1,9 +1,12 @@
 package com.re_kid.discordbot.command;
 
 import java.util.Optional;
-import java.util.function.Function;
+import java.util.function.Consumer;
 
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.slf4j.Logger;
+
+import com.re_kid.discordbot.I18n;
 
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
@@ -16,18 +19,26 @@ public class Command {
 
     protected Prefix prefix;
     protected String value;
-    protected CommandStatus commandStatus;
+    protected final CommandStatus commandStatus;
+    protected String optionSeparator;
+    protected I18n i18n;
+    protected SqlSessionFactory sqlSessionFactory;
     protected Logger logger;
 
-    public Command(Prefix prefix, String value, CommandStatus commandStatus, Logger logger) {
+    public Command(Prefix prefix, String value, CommandStatus commandStatus, String optionSeparator,
+            I18n i18n, SqlSessionFactory sqlSessionFactory, Logger logger) {
         this.prefix = prefix;
         this.value = value;
         this.commandStatus = commandStatus;
+        this.optionSeparator = optionSeparator;
+        this.i18n = i18n;
+        this.sqlSessionFactory = sqlSessionFactory;
         this.logger = logger;
     }
 
     public Command(Message message, Prefix prefixDefinition) {
         String[] command = message.getContentRaw().split(prefixDefinition.getSeparator());
+        command[1] = command[1].split(" ")[0];
         if (2 == command.length) {
             this.prefix = new Prefix(command[0], prefixDefinition.getSeparator());
             this.value = command[1];
@@ -39,10 +50,11 @@ public class Command {
 
     @Override
     public String toString() {
-        if (this.commandStatus.isIllegal()) {
-            return "";
-        }
         return this.prefix.toString() + this.value;
+    }
+
+    public String getValue() {
+        return new String(this.value);
     }
 
     /**
@@ -52,9 +64,6 @@ public class Command {
      * @return 等しければtrue
      */
     private boolean equals(Command command) {
-        if (this.commandStatus.isIllegal()) {
-            return false;
-        }
         return this.toString().equals(command.toString());
     }
 
@@ -64,10 +73,10 @@ public class Command {
      * @param event  メッセージ受信イベント
      * @param action 継承時に定義する干渉アクション
      */
-    protected void invoke(MessageReceivedEvent event, Function<MessageReceivedEvent, CommandStatus> action) {
+    protected void invoke(MessageReceivedEvent event, Consumer<MessageReceivedEvent> action) {
         this.validate(event).ifPresent(e -> {
             this.recordLogInvokedCommand(e.getAuthor());
-            this.recordLogResultCommand(action.apply(e));
+            action.accept(e);
         });
     }
 
@@ -81,7 +90,6 @@ public class Command {
     private Optional<MessageReceivedEvent> validate(MessageReceivedEvent event) {
         return Optional.ofNullable(event).filter(e -> !e.getAuthor().isBot())
                 .map(e -> new Command(event.getMessage(), this.prefix))
-                .filter(generatedCommandFromMessage -> !generatedCommandFromMessage.commandStatus.isIllegal())
                 .filter(generatedCommandFromMessage -> generatedCommandFromMessage.equals(this))
                 .map(c -> event);
     }
@@ -96,12 +104,28 @@ public class Command {
     }
 
     /**
+     * コマンドを失敗状態に変更し、実行ログを記録する
+     */
+    protected void changeStatusToFailedAndRecordLogResult() {
+        this.commandStatus.markAsFailed();
+        this.recordLogResultCommand();
+    }
+
+    /**
+     * コマンドを非失敗状態に変更し、実行ログを記録する
+     */
+    protected void changeStatusToNoFailedAndRecordLogResult() {
+        this.commandStatus.markAsNoFailed();
+        this.recordLogResultCommand();
+    }
+
+    /**
      * コマンドの実行結果ログを記録する
      * 
      * @param commandStatus コマンドの状態
      */
-    private void recordLogResultCommand(CommandStatus commandStatus) {
-        if (commandStatus.isIllegal()) {
+    private void recordLogResultCommand() {
+        if (this.commandStatus.isFailed()) {
             this.recordLogFailedCommand();
             return;
         }
@@ -119,7 +143,7 @@ public class Command {
      * コマンドの失敗ログを記録する
      */
     private void recordLogFailedCommand() {
-        this.logger.info("Command Failed!");
+        this.logger.warn("Command Failed!");
     }
 
 }

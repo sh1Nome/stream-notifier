@@ -5,11 +5,25 @@
  * For more details on building Java & JVM projects, please refer to https://docs.gradle.org/8.8/userguide/building_java_projects.html in the Gradle documentation.
  */
 
+buildscript {
+    repositories {
+        // Use Maven Central for resolving dependencies.
+        mavenCentral()
+    }
+
+    dependencies {
+        // https://mvnrepository.com/artifact/org.flywaydb/flyway-database-postgresql
+        classpath group: 'org.flywaydb', name: 'flyway-database-postgresql', version: "${flywayVersion}"
+    }
+}
+
 plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
     id 'application'
     // shadow
-    id 'com.gradleup.shadow' version '8.3.0'
+    id 'com.gradleup.shadow' version "${shadowVersion}"
+    // flyway
+    id "org.flywaydb.flyway" version "${flywayVersion}"
 }
 
 group = 'com.re-kid'
@@ -22,11 +36,16 @@ repositories {
 
 dependencies {
     // https://mvnrepository.com/artifact/net.dv8tion/JDA
-    implementation group: 'net.dv8tion', name: 'JDA', version: '5.1.0'
+    implementation group: 'net.dv8tion', name: 'JDA', version: "${jdaVersion}"
     // https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
-    implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.5.6'
+    implementation group: 'ch.qos.logback', name: 'logback-classic', version: "${logbackVersion}"
     // https://mvnrepository.com/artifact/com.google.inject/guice
-    implementation group: 'com.google.inject', name: 'guice', version: '7.0.0'
+    implementation group: 'com.google.inject', name: 'guice', version: "${guiceVersion}"
+    // https://mvnrepository.com/artifact/org.postgresql/postgresql
+    implementation group: 'org.postgresql', name: 'postgresql', version: "${jdbcPostgresVersion}"
+    // https://mvnrepository.com/artifact/org.mybatis/mybatis
+    implementation group: 'org.mybatis', name: 'mybatis', version: "${myBatisVersion}"
+
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
@@ -39,4 +58,11 @@ java {
 application {
     // Define the main class for the application.
     mainClass = 'com.re_kid.discordbot.StreamNotifier'
+}
+
+flyway {
+    url = "jdbc:postgresql://${System.getenv('POSTGRES_HOST')}:${System.getenv('POSTGRES_PORT')}/${System.getenv('POSTGRES_DB')}"
+    user = "${System.getenv('POSTGRES_USER')}"
+    password = "${System.getenv('POSTGRES_PASSWORD')}"
+    cleanDisabled = false
 }
