@@ -19,6 +19,9 @@ import com.re_kid.discordbot.mapper.entity.SystemSetting;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
 
+/**
+ * langコマンド
+ */
 public class Lang extends Command {
 
     private final En en;
@@ -31,6 +34,11 @@ public class Lang extends Command {
         this.ja = ja;
     }
 
+    /**
+     * langコマンドを実行する
+     * 
+     * @param event メッセージ受信イベント
+     */
     public void invoke(MessageReceivedEvent event) {
         super.invoke(event, e -> {
             Arrays.asList(event.getMessage().getContentRaw().split(" ")).stream()
@@ -55,6 +63,13 @@ public class Lang extends Command {
         });
     }
 
+    /**
+     * オプションを実行する
+     * 
+     * @param scheduledOption 実行予定のオプション
+     * @param event           メッセージ受信イベント
+     * @return
+     */
     private MessageCreateAction executeOption(Option scheduledOption, MessageReceivedEvent event) {
         if (en.equals(scheduledOption)) {
             return executeEnOption(event);
@@ -63,6 +78,12 @@ public class Lang extends Command {
         }
     }
 
+    /**
+     * enオプションを実行する
+     * 
+     * @param event メッセージ受信イベント
+     * @return
+     */
     private MessageCreateAction executeEnOption(MessageReceivedEvent event) {
         boolean success = false;
         try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
@@ -73,6 +94,12 @@ public class Lang extends Command {
         return this.sendMessage(event, success);
     }
 
+    /**
+     * jaオプションを実行する
+     * 
+     * @param event メッセージ受信イベント
+     * @return
+     */
     private MessageCreateAction executeJaOption(MessageReceivedEvent event) {
         boolean success = false;
         try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
@@ -83,6 +110,13 @@ public class Lang extends Command {
         return this.sendMessage(event, success);
     }
 
+    /**
+     * Discordにメッセージを送信する
+     * 
+     * @param event   メッセージ受信イベント
+     * @param success 成功フラグ
+     * @return
+     */
     private MessageCreateAction sendMessage(MessageReceivedEvent event, boolean success) {
         return success ? event.getChannel().sendMessage(this.i18n.getString("lang.succeeded"))
                 : event.getChannel().sendMessage(this.i18n.getString("lang.failed"));

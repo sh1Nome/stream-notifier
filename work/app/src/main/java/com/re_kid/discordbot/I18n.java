@@ -8,6 +8,9 @@ import org.apache.ibatis.session.SqlSessionFactory;
 
 import com.re_kid.discordbot.mapper.SystemSettingMapper;
 
+/**
+ * 多言語対応
+ */
 public class I18n {
     private final String baseName = "i18n/messages";
     private final SqlSessionFactory sqlSessionFactory;
@@ -16,6 +19,12 @@ public class I18n {
         this.sqlSessionFactory = sqlSessionFactory;
     }
 
+    /**
+     * キーに対応したメッセージを取得する
+     * 
+     * @param key キー
+     * @return
+     */
     public String getString(String key) {
         try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
             String langSettingValue = sqlSession.getMapper(SystemSettingMapper.class).selectById("lang")
