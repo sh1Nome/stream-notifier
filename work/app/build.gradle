@@ -61,7 +61,7 @@ application {
 }
 
 flyway {
-    url = "jdbc:postgresql://db:5432/${System.getenv('POSTGRES_DB')}"
+    url = "jdbc:postgresql://${System.getenv('POSTGRES_HOST')}:${System.getenv('POSTGRES_PORT')}/${System.getenv('POSTGRES_DB')}"
     user = "${System.getenv('POSTGRES_USER')}"
     password = "${System.getenv('POSTGRES_PASSWORD')}"
     cleanDisabled = false

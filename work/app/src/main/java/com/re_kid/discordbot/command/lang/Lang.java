@@ -1,7 +1,6 @@
 package com.re_kid.discordbot.command.lang;
 
 import java.util.Arrays;
-import java.util.Locale;
 
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -65,23 +64,28 @@ public class Lang extends Command {
     }
 
     private MessageCreateAction executeEnOption(MessageReceivedEvent event) {
+        boolean success = false;
         try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
             SystemSettingMapper systemSettingMapper = sqlSession.getMapper(SystemSettingMapper.class);
-            boolean success = systemSettingMapper.updateSystemSetting(new SystemSetting(this.value, en.getValue()));
+            success = systemSettingMapper.updateSystemSetting(new SystemSetting(this.value, en.getValue()));
             sqlSession.commit();
-            return success ? event.getChannel().sendMessage(this.i18n.getString(Locale.ENGLISH, "lang.succeeded"))
-                    : event.getChannel().sendMessage(this.i18n.getString("lang.failed"));
         }
+        return this.sendMessage(event, success);
     }
 
     private MessageCreateAction executeJaOption(MessageReceivedEvent event) {
+        boolean success = false;
         try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
             SystemSettingMapper systemSettingMapper = sqlSession.getMapper(SystemSettingMapper.class);
-            boolean success = systemSettingMapper.updateSystemSetting(new SystemSetting(this.value, ja.getValue()));
+            success = systemSettingMapper.updateSystemSetting(new SystemSetting(this.value, ja.getValue()));
             sqlSession.commit();
-            return success ? event.getChannel().sendMessage(this.i18n.getString(Locale.JAPANESE, "lang.succeeded"))
-                    : event.getChannel().sendMessage(this.i18n.getString("lang.failed"));
         }
+        return this.sendMessage(event, success);
+    }
+
+    private MessageCreateAction sendMessage(MessageReceivedEvent event, boolean success) {
+        return success ? event.getChannel().sendMessage(this.i18n.getString("lang.succeeded"))
+                : event.getChannel().sendMessage(this.i18n.getString("lang.failed"));
     }
 
 }

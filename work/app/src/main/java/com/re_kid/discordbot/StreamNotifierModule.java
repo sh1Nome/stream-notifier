@@ -49,12 +49,13 @@ public class StreamNotifierModule extends AbstractModule {
     /**
      * i18nオブジェクトをDIに設定する
      * 
+     * @param sqlSessionFactory sqlSessionFactory
      * @return i18nオブジェクト
      */
     @Provides
     @Singleton
-    public I18n provideI18n() {
-        return new I18n();
+    public I18n provideI18n(SqlSessionFactory sqlSessionFactory) {
+        return new I18n(sqlSessionFactory);
     }
 
     /**
@@ -174,10 +175,9 @@ public class StreamNotifierModule extends AbstractModule {
      */
     @Provides
     @Singleton
-    public Help provideHelp(Prefix prefix, I18n i18n, SqlSessionFactory sqlSessionFactory, Lang lang, En en, Ja ja,
-            Logger logger) {
+    public Help provideHelp(Prefix prefix, I18n i18n, SqlSessionFactory sqlSessionFactory, Logger logger) {
         return new Help(prefix, "help", new CommandStatus(false), this.optionSeparator, i18n, sqlSessionFactory,
-                lang, en, ja, logger);
+                logger);
     }
 
     /**
