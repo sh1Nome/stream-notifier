@@ -10,6 +10,9 @@ import com.re_kid.discordbot.I18n;
 import com.re_kid.discordbot.command.Command;
 import com.re_kid.discordbot.command.CommandStatus;
 import com.re_kid.discordbot.command.Prefix;
+import com.re_kid.discordbot.command.lang.Lang;
+import com.re_kid.discordbot.command.lang.option.En;
+import com.re_kid.discordbot.command.lang.option.Ja;
 import com.re_kid.discordbot.mapper.SystemSettingMapper;
 
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -19,9 +22,16 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
  */
 public class Help extends Command {
 
+    private final Lang lang;
+    private final En en;
+    private final Ja ja;
+
     public Help(Prefix prefix, String value, CommandStatus commandStatus, String optionSeparator, I18n i18n,
-            SqlSessionFactory sqlSessionFactory, Logger logger) {
+            SqlSessionFactory sqlSessionFactory, Lang lang, En en, Ja ja, Logger logger) {
         super(prefix, value, commandStatus, optionSeparator, i18n, sqlSessionFactory, logger);
+        this.lang = lang;
+        this.en = en;
+        this.ja = ja;
     }
 
     /**
@@ -33,10 +43,11 @@ public class Help extends Command {
         super.invoke(event, e -> {
             try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
                 String message = "";
-                String lang = sqlSession.getMapper(SystemSettingMapper.class).selectById("lang").getValue();
-                if ("en".equals(lang)) {
+                String lang = sqlSession.getMapper(SystemSettingMapper.class).selectById(this.lang.getValue())
+                        .getValue();
+                if (this.en.getValue().equals(lang)) {
                     message = this.i18n.getString(Locale.ENGLISH, "help.description");
-                } else if ("ja".equals(lang)) {
+                } else if (this.ja.getValue().equals(lang)) {
                     message = this.i18n.getString(Locale.JAPANESE, "help.description");
                 } else {
                     message = this.i18n.getString("help.description");

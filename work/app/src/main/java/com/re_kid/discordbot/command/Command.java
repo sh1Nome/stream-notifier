@@ -53,6 +53,10 @@ public class Command {
         return this.prefix.toString() + this.value;
     }
 
+    public String getValue() {
+        return new String(this.value);
+    }
+
     /**
      * コマンドが等しいかどうか確かめる
      * 
