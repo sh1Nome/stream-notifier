@@ -83,7 +83,7 @@ public class StreamNotifierModule extends AbstractModule {
     @Provides
     @Singleton
     public SqlSessionFactory provideSqlSessionFactory() throws IOException {
-        return new SqlSessionFactoryBuilder().build(Resources.getResourceAsStream("mybatis-config.xml"),
+        return new SqlSessionFactoryBuilder().build(Resources.getResourceAsStream("db/mapper/mybatis-config.xml"),
                 this.getDbConnectInfo());
     }
 
