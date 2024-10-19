@@ -16,8 +16,10 @@ import com.re_kid.discordbot.command.lang.option.Ja;
 import com.re_kid.discordbot.mapper.SystemSettingMapper;
 import com.re_kid.discordbot.mapper.entity.SystemSetting;
 
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
+import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 
 /**
  * langコマンド
@@ -118,7 +120,12 @@ public class Lang extends Command {
      * @return
      */
     private MessageCreateAction sendMessage(MessageReceivedEvent event, boolean success) {
-        return success ? event.getChannel().sendMessage(this.i18n.getString("lang.succeeded"))
+        return success
+                ? event.getChannel()
+                        .sendMessage(new MessageCreateBuilder()
+                                .setEmbeds(new EmbedBuilder()
+                                        .setDescription(this.i18n.getString("lang.succeeded")).build())
+                                .setTTS(false).build())
                 : event.getChannel().sendMessage(this.i18n.getString("lang.failed"));
     }
 
