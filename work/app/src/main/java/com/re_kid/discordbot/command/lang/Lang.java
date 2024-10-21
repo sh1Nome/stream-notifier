@@ -16,8 +16,11 @@ import com.re_kid.discordbot.command.lang.option.Ja;
 import com.re_kid.discordbot.mapper.SystemSettingMapper;
 import com.re_kid.discordbot.mapper.entity.SystemSetting;
 
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
+import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
+import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 
 /**
  * langコマンド
@@ -118,8 +121,25 @@ public class Lang extends Command {
      * @return
      */
     private MessageCreateAction sendMessage(MessageReceivedEvent event, boolean success) {
-        return success ? event.getChannel().sendMessage(this.i18n.getString("lang.succeeded"))
-                : event.getChannel().sendMessage(this.i18n.getString("lang.failed"));
+        return success
+                ? event.getChannel()
+                        .sendMessage(this.getMessageCreateDataWithDescription(
+                                "lang.succeeded"))
+                : event.getChannel().sendMessage(this.getMessageCreateDataWithDescription(
+                        "lang.failed"));
+    }
+
+    /**
+     * 説明付きのメッセージ送信データを取得する
+     * 
+     * @param description 説明
+     * @return 説明付きのメッセージ送信データ
+     */
+    private MessageCreateData getMessageCreateDataWithDescription(String description) {
+        return new MessageCreateBuilder()
+                .setEmbeds(new EmbedBuilder()
+                        .setDescription(this.i18n.getString(description)).build())
+                .setTTS(false).build();
     }
 
 }

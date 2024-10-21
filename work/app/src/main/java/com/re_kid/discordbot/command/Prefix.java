@@ -1,5 +1,7 @@
 package com.re_kid.discordbot.command;
 
+import com.google.common.base.Strings;
+
 /**
  * コマンドの接頭辞
  */
@@ -16,7 +18,7 @@ public class Prefix {
 
     @Override
     public String toString() {
-        return this.value + this.separator;
+        return Strings.nullToEmpty(this.value + this.separator);
     }
 
     /**
