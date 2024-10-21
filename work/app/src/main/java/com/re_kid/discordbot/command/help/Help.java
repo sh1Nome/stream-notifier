@@ -1,8 +1,6 @@
 package com.re_kid.discordbot.command.help;
 
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.slf4j.Logger;
@@ -38,19 +36,25 @@ public class Help extends Command {
                             .setDescription(this.i18n.getString("help.description"))
                             .addField(
                                     this.getCustomizedFieldNameForCommand("help.command.regist"),
-                                    this.getCustomizedFieldValueForCommand("help.command.regist.description", Map.of(
-                                            "help.command.option.youtube", "help.command.option.youtube.description",
-                                            "help.command.option.twitch", "help.command.option.twitch.description")),
+                                    this.getCustomizedFieldValueForCommand("help.command.regist.description",
+                                            List.of(new OptionRowMessageData(this.i18n, "help.command.option.youtube",
+                                                    "help.command.option.youtube.description"),
+                                                    new OptionRowMessageData(this.i18n, "help.command.option.twitch",
+                                                            "help.command.option.twitch.description"))),
                                     false)
                             .addField(this.getCustomizedFieldNameForCommand("help.command.unregist"),
-                                    this.getCustomizedFieldValueForCommand("help.command.unregist.description", Map.of(
-                                            "help.command.option.youtube", "help.command.option.youtube.description",
-                                            "help.command.option.twitch", "help.command.option.twitch.description")),
+                                    this.getCustomizedFieldValueForCommand("help.command.unregist.description",
+                                            List.of(new OptionRowMessageData(this.i18n, "help.command.option.youtube",
+                                                    "help.command.option.youtube.description"),
+                                                    new OptionRowMessageData(this.i18n, "help.command.option.twitch",
+                                                            "help.command.option.twitch.description"))),
                                     false)
                             .addField(this.getCustomizedFieldNameForCommand("help.command.lang"),
-                                    this.getCustomizedFieldValueForCommand("help.command.lang.description", Map.of(
-                                            "help.command.lang.option.en", "help.command.lang.option.en.description",
-                                            "help.command.lang.option.ja", "help.command.lang.option.ja.description")),
+                                    this.getCustomizedFieldValueForCommand("help.command.lang.description",
+                                            List.of(new OptionRowMessageData(this.i18n, "help.command.lang.option.en",
+                                                    "help.command.lang.option.en.description"),
+                                                    new OptionRowMessageData(this.i18n, "help.command.lang.option.ja",
+                                                            "help.command.lang.option.ja.description"))),
                                     false)
                             .build())
                     .setTTS(false).build()).queue(success -> {
@@ -75,26 +79,21 @@ public class Help extends Command {
     /**
      * コマンド用にカスタマイズされたEmbedのフィールドバリューを取得する
      * 
-     * @param descriptionKey 説明キー
-     * @param optionMap      オプションマップ
+     * @param descriptionKey        説明キー
+     * @param optionRowMessageDatas コマンド用にカスタマイズされたEmbedのフィールドバリューのオプション行（複数）
      * @return コマンド用にカスタマイズされたEmbedのフィールドバリュー
      */
-    private String getCustomizedFieldValueForCommand(String descriptionKey, Map<String, String> optionMap) {
+    private String getCustomizedFieldValueForCommand(String descriptionKey,
+            List<OptionRowMessageData> optionRowMessageDatas) {
         String fieldValue = """
                 %s: %s
                 %s:
                 """.formatted(this.i18n.getString("help.label.description"), this.i18n.getString(descriptionKey),
                 this.i18n.getString("help.label.option"));
-        List<String> optionRows = optionMap.entrySet().stream().map(option -> {
-            return """
-                        `%s%s`: %s
-                    """.formatted(this.optionSeparator, this.i18n.getString(option.getKey()),
-                    this.i18n.getString(option.getValue()));
-        }).collect(Collectors.toList());
-        for (String optionRow : optionRows) {
-            fieldValue += optionRow;
+        for (OptionRowMessageData optionRowMessageData : optionRowMessageDatas) {
+            fieldValue += optionRowMessageData.toString(this.optionSeparator);
         }
         return fieldValue;
-    };
+    }
 
 }
