@@ -6,6 +6,7 @@ import java.util.function.Consumer;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.slf4j.Logger;
 
+import com.google.common.base.Strings;
 import com.re_kid.discordbot.I18n;
 
 import net.dv8tion.jda.api.entities.Message;
@@ -19,7 +20,7 @@ public class Command {
 
     protected Prefix prefix;
     protected String value;
-    protected final CommandStatus commandStatus;
+    protected CommandStatus commandStatus;
     protected String optionSeparator;
     protected I18n i18n;
     protected SqlSessionFactory sqlSessionFactory;
@@ -38,19 +39,20 @@ public class Command {
 
     public Command(Message message, Prefix prefixDefinition) {
         String[] command = message.getContentRaw().split(prefixDefinition.getSeparator());
+        if (1 == command.length) {
+            return;
+        }
         command[1] = command[1].split(" ")[0];
         if (2 == command.length) {
             this.prefix = new Prefix(command[0], prefixDefinition.getSeparator());
             this.value = command[1];
-            this.commandStatus = new CommandStatus(false);
         } else {
-            this.commandStatus = new CommandStatus(true);
         }
     }
 
     @Override
     public String toString() {
-        return this.prefix.toString() + this.value;
+        return this.prefix != null ? Strings.nullToEmpty(this.prefix.toString() + this.value) : "";
     }
 
     public String getValue() {
