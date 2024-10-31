@@ -18,13 +18,13 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
  */
 public class Command {
 
-    protected Prefix prefix;
-    protected String value;
-    protected CommandStatus commandStatus;
-    protected String optionSeparator;
-    protected I18n i18n;
-    protected SqlSessionFactory sqlSessionFactory;
-    protected Logger logger;
+    protected final Prefix prefix;
+    protected final String value;
+    protected final CommandStatus commandStatus;
+    protected final String optionSeparator;
+    protected final I18n i18n;
+    protected final SqlSessionFactory sqlSessionFactory;
+    protected final Logger logger;
 
     public Command(Prefix prefix, String value, CommandStatus commandStatus, String optionSeparator,
             I18n i18n, SqlSessionFactory sqlSessionFactory, Logger logger) {
@@ -38,8 +38,15 @@ public class Command {
     }
 
     public Command(Message message, Prefix prefixDefinition) {
+        this.commandStatus = null;
+        this.optionSeparator = null;
+        this.i18n = null;
+        this.sqlSessionFactory = null;
+        this.logger = null;
         String[] command = message.getContentRaw().split(prefixDefinition.getSeparator());
         if (1 == command.length) {
+            this.prefix = null;
+            this.value = null;
             return;
         }
         command[1] = command[1].split(" ")[0];
@@ -47,6 +54,8 @@ public class Command {
             this.prefix = new Prefix(command[0], prefixDefinition.getSeparator());
             this.value = command[1];
         } else {
+            this.prefix = null;
+            this.value = null;
         }
     }
 
@@ -106,45 +115,16 @@ public class Command {
     }
 
     /**
-     * コマンドを失敗状態に変更し、実行ログを記録する
-     */
-    protected void changeStatusToFailedAndRecordLogResult() {
-        this.commandStatus.markAsFailed();
-        this.recordLogResultCommand();
-    }
-
-    /**
-     * コマンドを非失敗状態に変更し、実行ログを記録する
-     */
-    protected void changeStatusToNoFailedAndRecordLogResult() {
-        this.commandStatus.markAsNoFailed();
-        this.recordLogResultCommand();
-    }
-
-    /**
-     * コマンドの実行結果ログを記録する
-     * 
-     * @param commandStatus コマンドの状態
-     */
-    private void recordLogResultCommand() {
-        if (this.commandStatus.isFailed()) {
-            this.recordLogFailedCommand();
-            return;
-        }
-        this.recordLogSuccessfulCommand();
-    }
-
-    /**
      * コマンドの成功ログを記録する
      */
-    private void recordLogSuccessfulCommand() {
+    protected void recordLogSuccessfulCommand() {
         this.logger.info("Command Successful!");
     }
 
     /**
      * コマンドの失敗ログを記録する
      */
-    private void recordLogFailedCommand() {
+    protected void recordLogFailedCommand() {
         this.logger.warn("Command Failed!");
     }
 

@@ -55,13 +55,13 @@ public class Lang extends Command {
                     .ifPresentOrElse(
                             scheduledOption -> this.executeOption(scheduledOption, e).queue(
                                     success -> {
-                                        this.changeStatusToNoFailedAndRecordLogResult();
+                                        this.recordLogSuccessfulCommand();
                                     },
                                     error -> {
-                                        this.changeStatusToFailedAndRecordLogResult();
+                                        this.recordLogFailedCommand();
                                     }),
                             () -> {
-                                this.changeStatusToFailedAndRecordLogResult();
+                                this.recordLogFailedCommand();
                             });
         });
     }
