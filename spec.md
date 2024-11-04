@@ -24,5 +24,9 @@
         * `--ja`
         * `--en`
 
+## 通知チャンネル設定
+* `sn!notifyMe`
+* `sn!notNotifyMe`
+
 ## ヘルプ
 * `sn!help`
