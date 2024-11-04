@@ -20,17 +20,15 @@ public class Command {
 
     protected final Prefix prefix;
     protected final String value;
-    protected final CommandStatus commandStatus;
     protected final String optionSeparator;
     protected final I18n i18n;
     protected final SqlSessionFactory sqlSessionFactory;
     protected final Logger logger;
 
-    public Command(Prefix prefix, String value, CommandStatus commandStatus, String optionSeparator,
-            I18n i18n, SqlSessionFactory sqlSessionFactory, Logger logger) {
+    public Command(Prefix prefix, String value, String optionSeparator, I18n i18n,
+            SqlSessionFactory sqlSessionFactory, Logger logger) {
         this.prefix = prefix;
         this.value = value;
-        this.commandStatus = commandStatus;
         this.optionSeparator = optionSeparator;
         this.i18n = i18n;
         this.sqlSessionFactory = sqlSessionFactory;
@@ -38,7 +36,6 @@ public class Command {
     }
 
     public Command(Message message, Prefix prefixDefinition) {
-        this.commandStatus = null;
         this.optionSeparator = null;
         this.i18n = null;
         this.sqlSessionFactory = null;

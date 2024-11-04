@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 
 import com.re_kid.discordbot.I18n;
 import com.re_kid.discordbot.command.Command;
-import com.re_kid.discordbot.command.CommandStatus;
 import com.re_kid.discordbot.command.Option;
 import com.re_kid.discordbot.command.Prefix;
 import com.re_kid.discordbot.command.lang.option.En;
@@ -17,6 +16,9 @@ import com.re_kid.discordbot.mapper.SystemSettingMapper;
 import com.re_kid.discordbot.mapper.entity.SystemSetting;
 
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.Activity.ActivityType;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
@@ -29,12 +31,14 @@ public class Lang extends Command {
 
     private final En en;
     private final Ja ja;
+    private final JDA jda;
 
-    public Lang(Prefix prefix, String value, CommandStatus commandStatus, String optionSeparator, En en, Ja ja,
+    public Lang(Prefix prefix, String value, String optionSeparator, En en, Ja ja, JDA jda,
             SqlSessionFactory sqlSessionFactory, I18n i18n, Logger logger) {
-        super(prefix, value, commandStatus, optionSeparator, i18n, sqlSessionFactory, logger);
+        super(prefix, value, optionSeparator, i18n, sqlSessionFactory, logger);
         this.en = en;
         this.ja = ja;
+        this.jda = jda;
     }
 
     /**
@@ -94,6 +98,7 @@ public class Lang extends Command {
             success = systemSettingMapper.updateSystemSetting(new SystemSetting(this.value, en.getValue()));
             sqlSession.commit();
         }
+        this.jda.getPresence().setActivity(Activity.of(ActivityType.CUSTOM_STATUS, "English"));
         return this.sendMessage(event, success);
     }
 
@@ -110,6 +115,7 @@ public class Lang extends Command {
             success = systemSettingMapper.updateSystemSetting(new SystemSetting(this.value, ja.getValue()));
             sqlSession.commit();
         }
+        this.jda.getPresence().setActivity(Activity.of(ActivityType.CUSTOM_STATUS, "日本語"));
         return this.sendMessage(event, success);
     }
 

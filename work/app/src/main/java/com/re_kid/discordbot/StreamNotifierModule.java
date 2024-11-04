@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
-import com.re_kid.discordbot.command.CommandStatus;
 import com.re_kid.discordbot.command.Prefix;
 import com.re_kid.discordbot.command.help.Help;
 import com.re_kid.discordbot.command.lang.Lang;
@@ -176,8 +175,7 @@ public class StreamNotifierModule extends AbstractModule {
     @Provides
     @Singleton
     public Help provideHelp(Prefix prefix, I18n i18n, SqlSessionFactory sqlSessionFactory, Logger logger) {
-        return new Help(prefix, "help", new CommandStatus(false), this.optionSeparator, i18n, sqlSessionFactory,
-                logger);
+        return new Help(prefix, "help", this.optionSeparator, i18n, sqlSessionFactory, logger);
     }
 
     /**
@@ -211,10 +209,10 @@ public class StreamNotifierModule extends AbstractModule {
      */
     @Provides
     @Singleton
-    public Lang provideLang(Prefix prefix, En en, Ja ja, SqlSessionFactory sqlSessionFactory, I18n i18n,
+    public Lang provideLang(Prefix prefix, En en, Ja ja, JDA jda, SqlSessionFactory sqlSessionFactory,
+            I18n i18n,
             Logger logger) {
-        return new Lang(prefix, "lang", new CommandStatus(false), this.optionSeparator, en, ja, sqlSessionFactory,
-                i18n, logger);
+        return new Lang(prefix, "lang", this.optionSeparator, en, ja, jda, sqlSessionFactory, i18n, logger);
     }
 
 }
