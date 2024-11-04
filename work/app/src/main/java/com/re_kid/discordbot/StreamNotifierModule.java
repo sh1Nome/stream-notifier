@@ -24,8 +24,6 @@ import com.re_kid.discordbot.listener.StreamNotifierEventListener;
 import jakarta.inject.Singleton;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.entities.Activity.ActivityType;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 
@@ -95,8 +93,9 @@ public class StreamNotifierModule extends AbstractModule {
      */
     @Provides
     @Singleton
-    public StreamNotifier provideStreamNotifier(JDA api, StreamNotifierEventListener streamNotifierEventListener) {
-        return new StreamNotifier(api, streamNotifierEventListener);
+    public StreamNotifier provideStreamNotifier(JDA api, StreamNotifierEventListener streamNotifierEventListener,
+            Lang lang) {
+        return new StreamNotifier(api, streamNotifierEventListener, lang);
     }
 
     /**
@@ -109,7 +108,6 @@ public class StreamNotifierModule extends AbstractModule {
     public JDA provideJDA(Help help) {
         return JDABuilder.createDefault(System.getenv("STREAM_NOTIFIER_TOKEN"))
                 .enableIntents(this.getUpcomingGatewayIntents())
-                .setActivity(Activity.of(ActivityType.CUSTOM_STATUS, "Show description: " + help.toString()))
                 .build();
     }
 
@@ -209,10 +207,10 @@ public class StreamNotifierModule extends AbstractModule {
      */
     @Provides
     @Singleton
-    public Lang provideLang(Prefix prefix, En en, Ja ja, JDA jda, SqlSessionFactory sqlSessionFactory,
+    public Lang provideLang(Prefix prefix, En en, Ja ja, Help help, JDA jda, SqlSessionFactory sqlSessionFactory,
             I18n i18n,
             Logger logger) {
-        return new Lang(prefix, "lang", this.optionSeparator, en, ja, jda, sqlSessionFactory, i18n, logger);
+        return new Lang(prefix, "lang", this.optionSeparator, en, ja, help, jda, sqlSessionFactory, i18n, logger);
     }
 
 }

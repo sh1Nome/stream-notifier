@@ -83,7 +83,7 @@ public class Command {
      */
     protected void invoke(MessageReceivedEvent event, Consumer<MessageReceivedEvent> action) {
         this.validate(event).ifPresent(e -> {
-            this.recordLogInvokedCommand(e.getAuthor());
+            this.recordLogInvoked(e.getAuthor());
             action.accept(e);
         });
     }
@@ -107,21 +107,21 @@ public class Command {
      * 
      * @param author コマンド実行者
      */
-    private void recordLogInvokedCommand(User author) {
+    private void recordLogInvoked(User author) {
         this.logger.info("Command invoked: " + this.toString() + " invoked by " + author.getName());
     }
 
     /**
      * コマンドの成功ログを記録する
      */
-    protected void recordLogSuccessfulCommand() {
+    protected void recordLogSuccessful() {
         this.logger.info("Command Successful!");
     }
 
     /**
      * コマンドの失敗ログを記録する
      */
-    protected void recordLogFailedCommand() {
+    protected void recordLogFailed() {
         this.logger.warn("Command Failed!");
     }
 

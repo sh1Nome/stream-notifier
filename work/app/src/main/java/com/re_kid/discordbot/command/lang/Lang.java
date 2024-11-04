@@ -10,6 +10,7 @@ import com.re_kid.discordbot.I18n;
 import com.re_kid.discordbot.command.Command;
 import com.re_kid.discordbot.command.Option;
 import com.re_kid.discordbot.command.Prefix;
+import com.re_kid.discordbot.command.help.Help;
 import com.re_kid.discordbot.command.lang.option.En;
 import com.re_kid.discordbot.command.lang.option.Ja;
 import com.re_kid.discordbot.mapper.SystemSettingMapper;
@@ -32,13 +33,15 @@ public class Lang extends Command {
     private final En en;
     private final Ja ja;
     private final JDA jda;
+    private final Help help;
 
-    public Lang(Prefix prefix, String value, String optionSeparator, En en, Ja ja, JDA jda,
-            SqlSessionFactory sqlSessionFactory, I18n i18n, Logger logger) {
+    public Lang(Prefix prefix, String value, String optionSeparator, En en, Ja ja, Help help,
+            JDA jda, SqlSessionFactory sqlSessionFactory, I18n i18n, Logger logger) {
         super(prefix, value, optionSeparator, i18n, sqlSessionFactory, logger);
         this.en = en;
         this.ja = ja;
         this.jda = jda;
+        this.help = help;
     }
 
     /**
@@ -57,65 +60,64 @@ public class Lang extends Command {
                     })
                     .findFirst()
                     .ifPresentOrElse(
-                            scheduledOption -> this.executeOption(scheduledOption, e).queue(
+                            scheduledOption -> this.sendMessageAndUpdateSetting(scheduledOption, e).queue(
                                     success -> {
-                                        this.recordLogSuccessfulCommand();
+                                        this.changeActivity();
+                                        this.recordLogSuccessful();
                                     },
                                     error -> {
-                                        this.recordLogFailedCommand();
+                                        this.recordLogFailed();
                                     }),
                             () -> {
-                                this.recordLogFailedCommand();
+                                this.recordLogFailed();
                             });
         });
     }
 
     /**
-     * オプションを実行する
+     * メッセージ送信と設定変更をする
      * 
      * @param scheduledOption 実行予定のオプション
      * @param event           メッセージ受信イベント
      * @return
      */
-    private MessageCreateAction executeOption(Option scheduledOption, MessageReceivedEvent event) {
+    private MessageCreateAction sendMessageAndUpdateSetting(Option scheduledOption, MessageReceivedEvent event) {
         if (en.equals(scheduledOption)) {
-            return executeEnOption(event);
+            return sendMessageAndUpdateSettingForEn(event);
         } else {
-            return executeJaOption(event);
+            return sendMessageAndUpdateSettingForJa(event);
         }
     }
 
     /**
-     * enオプションを実行する
+     * enオプション向けのメッセージ送信と設定変更をする
      * 
      * @param event メッセージ受信イベント
      * @return
      */
-    private MessageCreateAction executeEnOption(MessageReceivedEvent event) {
+    private MessageCreateAction sendMessageAndUpdateSettingForEn(MessageReceivedEvent event) {
         boolean success = false;
         try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
             SystemSettingMapper systemSettingMapper = sqlSession.getMapper(SystemSettingMapper.class);
             success = systemSettingMapper.updateSystemSetting(new SystemSetting(this.value, en.getValue()));
             sqlSession.commit();
         }
-        this.jda.getPresence().setActivity(Activity.of(ActivityType.CUSTOM_STATUS, "English"));
         return this.sendMessage(event, success);
     }
 
     /**
-     * jaオプションを実行する
+     * jaオプション向けのメッセージ送信と設定変更をする
      * 
      * @param event メッセージ受信イベント
      * @return
      */
-    private MessageCreateAction executeJaOption(MessageReceivedEvent event) {
+    private MessageCreateAction sendMessageAndUpdateSettingForJa(MessageReceivedEvent event) {
         boolean success = false;
         try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
             SystemSettingMapper systemSettingMapper = sqlSession.getMapper(SystemSettingMapper.class);
             success = systemSettingMapper.updateSystemSetting(new SystemSetting(this.value, ja.getValue()));
             sqlSession.commit();
         }
-        this.jda.getPresence().setActivity(Activity.of(ActivityType.CUSTOM_STATUS, "日本語"));
         return this.sendMessage(event, success);
     }
 
@@ -146,6 +148,15 @@ public class Lang extends Command {
                 .setEmbeds(new EmbedBuilder()
                         .setDescription(this.i18n.getString(description)).build())
                 .setTTS(false).build();
+    }
+
+    /**
+     * アクティビティを変更する
+     */
+    public void changeActivity() {
+        this.jda.getPresence()
+                .setActivity(Activity.of(ActivityType.CUSTOM_STATUS,
+                        this.i18n.getString("help.command.lang.activity") + ": " + help.toString()));
     }
 
 }

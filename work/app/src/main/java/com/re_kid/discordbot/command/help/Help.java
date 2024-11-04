@@ -74,10 +74,10 @@ public class Help extends Command {
                                                                         false)
                                                         .build())
                                         .setTTS(false).build()).queue(success -> {
-                                                this.recordLogSuccessfulCommand();
+                                                this.recordLogSuccessful();
                                         },
                                                         error -> {
-                                                                this.recordLogFailedCommand();
+                                                                this.recordLogFailed();
                                                         });
                 });
         }
