@@ -20,17 +20,15 @@ public class Command {
 
     protected final Prefix prefix;
     protected final String value;
-    protected final CommandStatus commandStatus;
     protected final String optionSeparator;
     protected final I18n i18n;
     protected final SqlSessionFactory sqlSessionFactory;
     protected final Logger logger;
 
-    public Command(Prefix prefix, String value, CommandStatus commandStatus, String optionSeparator,
-            I18n i18n, SqlSessionFactory sqlSessionFactory, Logger logger) {
+    public Command(Prefix prefix, String value, String optionSeparator, I18n i18n,
+            SqlSessionFactory sqlSessionFactory, Logger logger) {
         this.prefix = prefix;
         this.value = value;
-        this.commandStatus = commandStatus;
         this.optionSeparator = optionSeparator;
         this.i18n = i18n;
         this.sqlSessionFactory = sqlSessionFactory;
@@ -38,7 +36,6 @@ public class Command {
     }
 
     public Command(Message message, Prefix prefixDefinition) {
-        this.commandStatus = null;
         this.optionSeparator = null;
         this.i18n = null;
         this.sqlSessionFactory = null;
@@ -86,7 +83,7 @@ public class Command {
      */
     protected void invoke(MessageReceivedEvent event, Consumer<MessageReceivedEvent> action) {
         this.validate(event).ifPresent(e -> {
-            this.recordLogInvokedCommand(e.getAuthor());
+            this.recordLogInvoked(e.getAuthor());
             action.accept(e);
         });
     }
@@ -110,21 +107,21 @@ public class Command {
      * 
      * @param author コマンド実行者
      */
-    private void recordLogInvokedCommand(User author) {
+    private void recordLogInvoked(User author) {
         this.logger.info("Command invoked: " + this.toString() + " invoked by " + author.getName());
     }
 
     /**
      * コマンドの成功ログを記録する
      */
-    protected void recordLogSuccessfulCommand() {
+    protected void recordLogSuccessful() {
         this.logger.info("Command Successful!");
     }
 
     /**
      * コマンドの失敗ログを記録する
      */
-    protected void recordLogFailedCommand() {
+    protected void recordLogFailed() {
         this.logger.warn("Command Failed!");
     }
 
