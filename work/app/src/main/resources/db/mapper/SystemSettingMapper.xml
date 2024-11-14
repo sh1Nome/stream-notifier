@@ -2,11 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.re_kid.discordbot.mapper.SystemSettingMapper">
   <resultMap id="systemSettingResultMap" type="SystemSetting">
-    <id property="id" column="id" />
-    <result property="value" column="value" />
+    <id property="guildId" column="guild_id" />
+    <id property="lang" column="lang" />
+    <id property="channelId" column="channel_id" />
   </resultMap>
   <select id="selectById" parameterType="String" resultMap="systemSettingResultMap"> SELECT * FROM
-    system_setting WHERE id = #{id} </select>
-  <update id="updateSystemSetting" parameterType="SystemSetting"> UPDATE system_setting SET id =
-    #{id}, value = #{value} WHERE id = #{id} </update>
+    system_setting WHERE guild_id = #{guildId} </select>
+  <insert id="insertSystemSetting" parameterType="SystemSetting">INSERT INTO system_setting
+    (guild_id, lang, channel_id) VALUES (#{guildId}, #{lang}, #{channelId})</insert>
+  <update id="updateSystemSetting" parameterType="SystemSetting"> UPDATE system_setting SET guild_id
+    = #{guildId}, lang = #{lang}, channel_id = #{channelId} WHERE guild_id = #{guildId} </update>
 </mapper>

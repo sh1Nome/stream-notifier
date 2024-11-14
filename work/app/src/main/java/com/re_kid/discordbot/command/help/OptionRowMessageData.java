@@ -10,10 +10,11 @@ public class OptionRowMessageData {
     private final String value;
     private final String description;
 
-    public OptionRowMessageData(I18n i18n, String valueKey, String descriptionKey) {
+    public OptionRowMessageData(String guildId, I18n i18n, String valueKey,
+            String descriptionKey) {
         this.i18n = i18n;
-        this.value = this.i18n.getString(valueKey);
-        this.description = this.i18n.getString(descriptionKey);
+        this.value = this.i18n.getString(guildId, valueKey);
+        this.description = this.i18n.getString(guildId, descriptionKey);
     }
 
     /**

@@ -1,27 +1,26 @@
 package com.re_kid.discordbot.mapper.entity;
 
 public class SystemSetting {
-    private String id;
-    private String value;
+    private String guildId;
+    private String lang;
+    private String channelId;
 
-    public SystemSetting(String id, String value) {
-        this.id = id;
-        this.value = value;
+    public SystemSetting(String guildId, String lang, String channelId) {
+        this.guildId = guildId;
+        this.lang = lang;
+        this.channelId = channelId;
     }
 
-    public String getId() {
-        return id;
+    public String getGuildId() {
+        return guildId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public String getLang() {
+        return lang;
     }
 
-    public String getValue() {
-        return value;
+    public String getChannelId() {
+        return channelId;
     }
 
-    public void setValue(String value) {
-        this.value = value;
-    }
 }
