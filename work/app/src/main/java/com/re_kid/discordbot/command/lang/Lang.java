@@ -98,8 +98,15 @@ public class Lang extends Command {
     private MessageCreateAction sendMessageAndUpdateSettingForEn(MessageReceivedEvent event) {
         boolean success = false;
         try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            String guildId = event.getGuild().getId();
             SystemSettingMapper systemSettingMapper = sqlSession.getMapper(SystemSettingMapper.class);
-            success = systemSettingMapper.updateSystemSetting(new SystemSetting(this.value, en.getValue()));
+            SystemSetting selectData = systemSettingMapper.selectById(guildId);
+            if (selectData == null) {
+                success = systemSettingMapper.insertSystemSetting(new SystemSetting(guildId, this.en.getValue(), ""));
+            } else {
+                success = systemSettingMapper
+                        .updateSystemSetting(new SystemSetting(guildId, this.en.getValue(), selectData.getChannelId()));
+            }
             sqlSession.commit();
         }
         return this.sendMessage(event, success);
@@ -114,8 +121,15 @@ public class Lang extends Command {
     private MessageCreateAction sendMessageAndUpdateSettingForJa(MessageReceivedEvent event) {
         boolean success = false;
         try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            String guildId = event.getGuild().getId();
             SystemSettingMapper systemSettingMapper = sqlSession.getMapper(SystemSettingMapper.class);
-            success = systemSettingMapper.updateSystemSetting(new SystemSetting(this.value, ja.getValue()));
+            SystemSetting selectData = systemSettingMapper.selectById(guildId);
+            if (selectData == null) {
+                success = systemSettingMapper.insertSystemSetting(new SystemSetting(guildId, this.ja.getValue(), ""));
+            } else {
+                success = systemSettingMapper
+                        .updateSystemSetting(new SystemSetting(guildId, this.ja.getValue(), selectData.getChannelId()));
+            }
             sqlSession.commit();
         }
         return this.sendMessage(event, success);
@@ -129,24 +143,27 @@ public class Lang extends Command {
      * @return
      */
     private MessageCreateAction sendMessage(MessageReceivedEvent event, boolean success) {
+        String guildId = event.getGuild().getId();
         return success
                 ? event.getChannel()
                         .sendMessage(this.getMessageCreateDataWithDescription(
-                                "lang.succeeded"))
+                                guildId, "lang.succeeded"))
                 : event.getChannel().sendMessage(this.getMessageCreateDataWithDescription(
-                        "lang.failed"));
+                        guildId, "lang.failed"));
     }
 
     /**
      * 説明付きのメッセージ送信データを取得する
      * 
+     * @param guildId     TODO
      * @param description 説明
+     * 
      * @return 説明付きのメッセージ送信データ
      */
-    private MessageCreateData getMessageCreateDataWithDescription(String description) {
+    private MessageCreateData getMessageCreateDataWithDescription(String guildId, String description) {
         return new MessageCreateBuilder()
                 .setEmbeds(new EmbedBuilder()
-                        .setDescription(this.i18n.getString(description)).build())
+                        .setDescription(this.i18n.getString(guildId, description)).build())
                 .setTTS(false).build();
     }
 
@@ -156,7 +173,7 @@ public class Lang extends Command {
     public void changeActivity() {
         this.jda.getPresence()
                 .setActivity(Activity.of(ActivityType.CUSTOM_STATUS,
-                        this.i18n.getString("help.command.lang.activity") + ": " + help.toString()));
+                        this.i18n.getStringForEn("help.command.lang.activity") + ": " + help.toString()));
     }
 
 }
