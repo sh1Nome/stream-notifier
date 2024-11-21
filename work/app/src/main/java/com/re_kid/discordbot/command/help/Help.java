@@ -10,8 +10,11 @@ import com.re_kid.discordbot.command.Command;
 import com.re_kid.discordbot.command.Prefix;
 
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.MessageEmbed.Field;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
+import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 
 /**
  * helpコマンド
@@ -31,65 +34,57 @@ public class Help extends Command {
         public void invoke(MessageReceivedEvent event) {
                 super.invoke(event, e -> {
                         String guildId = e.getGuild().getId();
-                        e.getChannel().sendMessage(new MessageCreateBuilder()
-                                        .setEmbeds(new EmbedBuilder()
-                                                        .setDescription(this.i18n.getString(guildId,
-                                                                        "help.description"))
-                                                        .addField(this.getCustomizedFieldNameForCommand(
-                                                                        guildId, "help.command.regist"),
-                                                                        this.getCustomizedFieldValueForCommand(
-                                                                                        guildId,
-                                                                                        "help.command.regist.description",
-                                                                                        List.of(new OptionRowMessageData(
-                                                                                                        guildId,
-                                                                                                        this.i18n,
-                                                                                                        "help.command.option.youtube",
-                                                                                                        "help.command.option.youtube.description"),
-                                                                                                        new OptionRowMessageData(
-                                                                                                                        guildId,
-                                                                                                                        this.i18n,
-                                                                                                                        "help.command.option.twitch",
-                                                                                                                        "help.command.option.twitch.description"))),
-                                                                        false)
-                                                        .addField(this.getCustomizedFieldNameForCommand(
-                                                                        guildId, "help.command.unregist"),
-                                                                        this.getCustomizedFieldValueForCommand(
-                                                                                        guildId,
-                                                                                        "help.command.unregist.description",
-                                                                                        List.of(new OptionRowMessageData(
-                                                                                                        guildId,
-                                                                                                        this.i18n,
-                                                                                                        "help.command.option.youtube",
-                                                                                                        "help.command.option.youtube.description"),
-                                                                                                        new OptionRowMessageData(
-                                                                                                                        guildId,
-                                                                                                                        this.i18n,
-                                                                                                                        "help.command.option.twitch",
-                                                                                                                        "help.command.option.twitch.description"))),
-                                                                        false)
-                                                        .addField(this.getCustomizedFieldNameForCommand(
-                                                                        guildId, "help.command.lang"),
-                                                                        this.getCustomizedFieldValueForCommand(
-                                                                                        guildId,
-                                                                                        "help.command.lang.description",
-                                                                                        List.of(new OptionRowMessageData(
-                                                                                                        guildId,
-                                                                                                        this.i18n,
-                                                                                                        "help.command.lang.option.en",
-                                                                                                        "help.command.lang.option.en.description"),
-                                                                                                        new OptionRowMessageData(
-                                                                                                                        guildId,
-                                                                                                                        this.i18n,
-                                                                                                                        "help.command.lang.option.ja",
-                                                                                                                        "help.command.lang.option.ja.description"))),
-                                                                        false)
-                                                        .build())
-                                        .setTTS(false).build()).queue(success -> {
-                                                this.recordLogSuccessful();
-                                        },
-                                                        error -> {
-                                                                this.recordLogFailed();
-                                                        });
+                        OptionRowMessageData optionForYoutube = new OptionRowMessageData(
+                                        guildId,
+                                        this.i18n,
+                                        "help.command.option.youtube",
+                                        "help.command.option.youtube.description");
+                        OptionRowMessageData optionForTwitch = new OptionRowMessageData(
+                                        guildId,
+                                        this.i18n,
+                                        "help.command.option.twitch",
+                                        "help.command.option.twitch.description");
+                        List<OptionRowMessageData> optionsForRegistAndUnregist = List.of(optionForYoutube,
+                                        optionForTwitch);
+
+                        Field commandForRegist = new Field(
+                                        this.getCustomizedFieldNameForCommand(guildId, "help.command.regist"),
+                                        this.getCustomizedFieldValueForCommand(guildId,
+                                                        "help.command.regist.description", optionsForRegistAndUnregist),
+                                        false);
+                        Field commandForUnregist = new Field(
+                                        this.getCustomizedFieldNameForCommand(guildId, "help.command.unregist"),
+                                        this.getCustomizedFieldValueForCommand(guildId,
+                                                        "help.command.unregist.description",
+                                                        optionsForRegistAndUnregist),
+                                        false);
+
+                        OptionRowMessageData optionForEn = new OptionRowMessageData(guildId, this.i18n,
+                                        "help.command.lang.option.en", "help.command.lang.option.en.description");
+                        OptionRowMessageData optionForJa = new OptionRowMessageData(guildId, this.i18n,
+                                        "help.command.lang.option.ja", "help.command.lang.option.ja.description");
+                        List<OptionRowMessageData> optionsForLang = List.of(optionForEn, optionForJa);
+                        Field commandForLang = new Field(
+                                        this.getCustomizedFieldNameForCommand(guildId, "help.command.lang"),
+                                        this.getCustomizedFieldValueForCommand(guildId, "help.command.lang.description",
+                                                        optionsForLang),
+                                        false);
+
+                        MessageEmbed embed = new EmbedBuilder()
+                                        .setDescription(this.i18n.getString(guildId,
+                                                        "help.description"))
+                                        .addField(commandForRegist)
+                                        .addField(commandForUnregist)
+                                        .addField(commandForLang)
+                                        .build();
+
+                        MessageCreateData data = new MessageCreateBuilder()
+                                        .setEmbeds(embed)
+                                        .setTTS(false).build();
+
+                        e.getChannel().sendMessage(data)
+                                        .queue(success -> this.recordLogSuccessful(),
+                                                        error -> this.recordLogFailed());
                 });
         }
 
