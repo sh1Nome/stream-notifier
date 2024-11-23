@@ -19,6 +19,7 @@ import com.re_kid.discordbot.command.lang.Lang;
 import com.re_kid.discordbot.command.lang.option.En;
 import com.re_kid.discordbot.command.lang.option.Ja;
 import com.re_kid.discordbot.command.notifyme.NotifyMe;
+import com.re_kid.discordbot.command.notnotifyme.NotNotifyMe;
 import com.re_kid.discordbot.db.repository.SystemSettingRepository;
 import com.re_kid.discordbot.listener.MessageReceivedEventListener;
 import com.re_kid.discordbot.listener.StreamNotifierEventListener;
@@ -151,15 +152,17 @@ public class StreamNotifierModule extends AbstractModule {
     /**
      * メッセージ受信イベントリスナーをDIに設定する
      * 
-     * @param help     helpコマンド
-     * @param lang     langコマンド
-     * @param notifyMe notifyMeコマンド
+     * @param help        helpコマンド
+     * @param lang        langコマンド
+     * @param notifyMe    notifyMeコマンド
+     * @param notNotifyMe TODO
      * @return メッセージ受信イベントリスナー
      */
     @Provides
     @Singleton
-    public MessageReceivedEventListener provideMessageReceivedEventListener(Help help, Lang lang, NotifyMe notifyMe) {
-        return new MessageReceivedEventListener(MessageReceivedEvent.class, help, lang, notifyMe);
+    public MessageReceivedEventListener provideMessageReceivedEventListener(Help help, Lang lang, NotifyMe notifyMe,
+            NotNotifyMe notNotifyMe) {
+        return new MessageReceivedEventListener(MessageReceivedEvent.class, help, lang, notifyMe, notNotifyMe);
     }
 
     /**
@@ -246,6 +249,22 @@ public class StreamNotifierModule extends AbstractModule {
     public NotifyMe provideNotifyMe(Prefix prefix, I18n i18n, SystemSettingRepository systemSettingRepository,
             Logger logger) {
         return new NotifyMe(prefix, "notifyMe", this.optionSeparator, i18n, systemSettingRepository, logger);
+    }
+
+    /**
+     * notNotifyMeコマンドをDIに設定する
+     * 
+     * @param prefix
+     * @param i18n
+     * @param systemSettingRepository
+     * @param logger
+     * @return
+     */
+    @Provides
+    @Singleton
+    public NotNotifyMe provideNotNotifyMe(Prefix prefix, I18n i18n, SystemSettingRepository systemSettingRepository,
+            Logger logger) {
+        return new NotNotifyMe(prefix, "notNotifyMe", optionSeparator, i18n, systemSettingRepository, logger);
     }
 
 }

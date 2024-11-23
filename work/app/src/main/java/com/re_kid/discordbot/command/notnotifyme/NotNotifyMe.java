@@ -1,4 +1,4 @@
-package com.re_kid.discordbot.command.notifyme;
+package com.re_kid.discordbot.command.notnotifyme;
 
 import org.slf4j.Logger;
 
@@ -14,9 +14,9 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 
-public class NotifyMe extends Command {
+public class NotNotifyMe extends Command {
 
-    public NotifyMe(Prefix prefix, String value, String optionSeparator, I18n i18n,
+    public NotNotifyMe(Prefix prefix, String value, String optionSeparator, I18n i18n,
             SystemSettingRepository systemSettingRepository,
             Logger logger) {
         super(prefix, value, optionSeparator, i18n, systemSettingRepository, logger);
@@ -25,18 +25,13 @@ public class NotifyMe extends Command {
     public void invoke(MessageReceivedEvent event) {
         super.invoke(event, e -> {
             String guildId = event.getGuild().getId();
-            String channelId = event.getChannel().getId();
             SystemSetting systemSetting = systemSettingRepository.selectById(guildId);
             boolean changed = false;
-            if (systemSetting == null) {
-                SystemSetting insertedSetting = new SystemSetting(guildId, "", channelId);
-                changed = systemSettingRepository.insertSystemSetting(insertedSetting);
-            } else {
-                SystemSetting updatedSetting = new SystemSetting(guildId, systemSetting.getLang(),
-                        channelId);
+            if (systemSetting != null) {
+                SystemSetting updatedSetting = new SystemSetting(guildId, systemSetting.getLang(), "");
                 changed = systemSettingRepository.updateSystemSetting(updatedSetting);
             }
-            String descriptionKey = changed ? "notifyme.succeeded" : "notifyme.failed";
+            String descriptionKey = changed ? "notnotifyme.succeeded" : "notnotifyme.failed";
             MessageEmbed messageEmbed = new EmbedBuilder().setDescription(this.i18n.getString(guildId, descriptionKey))
                     .build();
             MessageCreateData messageCreateData = new MessageCreateBuilder().setEmbeds(messageEmbed).build();
