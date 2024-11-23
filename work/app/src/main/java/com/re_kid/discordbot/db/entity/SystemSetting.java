@@ -1,4 +1,4 @@
-package com.re_kid.discordbot.mapper.entity;
+package com.re_kid.discordbot.db.entity;
 
 public class SystemSetting {
     private String guildId;

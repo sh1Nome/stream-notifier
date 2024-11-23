@@ -18,6 +18,8 @@ import com.re_kid.discordbot.command.help.Help;
 import com.re_kid.discordbot.command.lang.Lang;
 import com.re_kid.discordbot.command.lang.option.En;
 import com.re_kid.discordbot.command.lang.option.Ja;
+import com.re_kid.discordbot.command.notifyme.NotifyMe;
+import com.re_kid.discordbot.db.repository.SystemSettingRepository;
 import com.re_kid.discordbot.listener.MessageReceivedEventListener;
 import com.re_kid.discordbot.listener.StreamNotifierEventListener;
 
@@ -46,13 +48,14 @@ public class StreamNotifierModule extends AbstractModule {
     /**
      * i18nオブジェクトをDIに設定する
      * 
-     * @param sqlSessionFactory sqlSessionFactory
+     * @param systemSettingRepository TODO
+     * 
      * @return i18nオブジェクト
      */
     @Provides
     @Singleton
-    public I18n provideI18n(SqlSessionFactory sqlSessionFactory) {
-        return new I18n(sqlSessionFactory);
+    public I18n provideI18n(SystemSettingRepository systemSettingRepository) {
+        return new I18n(systemSettingRepository);
     }
 
     /**
@@ -82,6 +85,16 @@ public class StreamNotifierModule extends AbstractModule {
     public SqlSessionFactory provideSqlSessionFactory() throws IOException {
         return new SqlSessionFactoryBuilder().build(Resources.getResourceAsStream("db/mapper/mybatis-config.xml"),
                 this.getDbConnectInfo());
+    }
+
+    /**
+     * @param sqlSessionFactory
+     * @return
+     */
+    @Provides
+    @Singleton
+    public SystemSettingRepository provideSystemSettingRepository(SqlSessionFactory sqlSessionFactory) {
+        return new SystemSettingRepository(sqlSessionFactory);
     }
 
     /**
@@ -138,13 +151,15 @@ public class StreamNotifierModule extends AbstractModule {
     /**
      * メッセージ受信イベントリスナーをDIに設定する
      * 
-     * @param help helpコマンド
+     * @param help     helpコマンド
+     * @param lang     langコマンド
+     * @param notifyMe notifyMeコマンド
      * @return メッセージ受信イベントリスナー
      */
     @Provides
     @Singleton
-    public MessageReceivedEventListener provideMessageReceivedEventListener(Help help, Lang lang) {
-        return new MessageReceivedEventListener(MessageReceivedEvent.class, help, lang);
+    public MessageReceivedEventListener provideMessageReceivedEventListener(Help help, Lang lang, NotifyMe notifyMe) {
+        return new MessageReceivedEventListener(MessageReceivedEvent.class, help, lang, notifyMe);
     }
 
     /**
@@ -172,8 +187,8 @@ public class StreamNotifierModule extends AbstractModule {
      */
     @Provides
     @Singleton
-    public Help provideHelp(Prefix prefix, I18n i18n, SqlSessionFactory sqlSessionFactory, Logger logger) {
-        return new Help(prefix, "help", this.optionSeparator, i18n, sqlSessionFactory, logger);
+    public Help provideHelp(Prefix prefix, I18n i18n, SystemSettingRepository systemSettingRepository, Logger logger) {
+        return new Help(prefix, "help", this.optionSeparator, i18n, systemSettingRepository, logger);
     }
 
     /**
@@ -201,16 +216,36 @@ public class StreamNotifierModule extends AbstractModule {
     /**
      * langコマンドをDIに設定する
      * 
-     * @param prefix コマンドの接頭辞
-     * @param logger ログオブジェクト
+     * @param prefix                  コマンドの接頭辞
+     * @param systemSettingRepository TODO
+     * @param logger                  ログオブジェクト
+     * 
      * @return langコマンド
      */
     @Provides
     @Singleton
-    public Lang provideLang(Prefix prefix, En en, Ja ja, Help help, JDA jda, SqlSessionFactory sqlSessionFactory,
+    public Lang provideLang(Prefix prefix, En en, Ja ja, Help help, JDA jda,
+            SystemSettingRepository systemSettingRepository,
             I18n i18n,
             Logger logger) {
-        return new Lang(prefix, "lang", this.optionSeparator, en, ja, help, jda, sqlSessionFactory, i18n, logger);
+        return new Lang(prefix, "lang", this.optionSeparator, en, ja, help, jda, systemSettingRepository, i18n, logger);
+    }
+
+    /**
+     * notifyMeコマンドをDIに設定する
+     * 
+     * @param prefix                  コマンドの接頭辞
+     * @param i18n                    i18nオブジェクト
+     * @param systemSettingRepository TODO
+     * @param logger                  ログオブジェクト
+     * 
+     * @return
+     */
+    @Provides
+    @Singleton
+    public NotifyMe provideNotifyMe(Prefix prefix, I18n i18n, SystemSettingRepository systemSettingRepository,
+            Logger logger) {
+        return new NotifyMe(prefix, "notifyMe", this.optionSeparator, i18n, systemSettingRepository, logger);
     }
 
 }

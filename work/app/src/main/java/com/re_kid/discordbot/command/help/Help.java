@@ -2,12 +2,12 @@ package com.re_kid.discordbot.command.help;
 
 import java.util.List;
 
-import org.apache.ibatis.session.SqlSessionFactory;
 import org.slf4j.Logger;
 
 import com.re_kid.discordbot.I18n;
 import com.re_kid.discordbot.command.Command;
 import com.re_kid.discordbot.command.Prefix;
+import com.re_kid.discordbot.db.repository.SystemSettingRepository;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -21,9 +21,10 @@ import net.dv8tion.jda.api.utils.messages.MessageCreateData;
  */
 public class Help extends Command {
 
-        public Help(Prefix prefix, String value, String optionSeparator, I18n i18n, SqlSessionFactory sqlSessionFactory,
+        public Help(Prefix prefix, String value, String optionSeparator, I18n i18n,
+                        SystemSettingRepository systemSettingRepository,
                         Logger logger) {
-                super(prefix, value, optionSeparator, i18n, sqlSessionFactory, logger);
+                super(prefix, value, optionSeparator, i18n, systemSettingRepository, logger);
         }
 
         /**

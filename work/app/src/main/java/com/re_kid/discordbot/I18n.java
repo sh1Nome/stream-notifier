@@ -3,21 +3,18 @@ package com.re_kid.discordbot;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
-
-import com.re_kid.discordbot.mapper.SystemSettingMapper;
-import com.re_kid.discordbot.mapper.entity.SystemSetting;
+import com.re_kid.discordbot.db.entity.SystemSetting;
+import com.re_kid.discordbot.db.repository.SystemSettingRepository;
 
 /**
  * 多言語対応
  */
 public class I18n {
     private final String baseName = "i18n/messages";
-    private final SqlSessionFactory sqlSessionFactory;
+    private final SystemSettingRepository systemSettingRepository;
 
-    public I18n(SqlSessionFactory sqlSessionFactory) {
-        this.sqlSessionFactory = sqlSessionFactory;
+    public I18n(SystemSettingRepository systemSettingRepository) {
+        this.systemSettingRepository = systemSettingRepository;
     }
 
     /**
@@ -29,21 +26,19 @@ public class I18n {
      * @return
      */
     public String getString(String guildId, String key) {
-        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-            SystemSetting selectData = sqlSession.getMapper(SystemSettingMapper.class).selectById(guildId);
-            if (selectData == null) {
-                return getStringForNoSetting(key);
-            }
-            String langSettingValue = selectData.getLang();
-            if ("en".equals(langSettingValue)) {
-                return this.getStringForEn(key);
-            } else if ("ja".equals(langSettingValue)) {
-                return ResourceBundle.getBundle(baseName, Locale.JAPANESE).getString(key);
-            } else {
-                return getStringForNoSetting(key);
-            }
-
+        SystemSetting selectData = systemSettingRepository.selectById(guildId);
+        if (selectData == null) {
+            return getStringForNoSetting(key);
         }
+        String langSettingValue = selectData.getLang();
+        if ("en".equals(langSettingValue)) {
+            return this.getStringForEn(key);
+        }
+        if ("ja".equals(langSettingValue)) {
+            return ResourceBundle.getBundle(baseName, Locale.JAPANESE).getString(key);
+        }
+        return getStringForNoSetting(key);
+
     }
 
     /**

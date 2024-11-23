@@ -5,7 +5,7 @@
     <setting name="defaultStatementTimeout" value="60" />
   </settings>
   <typeAliases>
-    <typeAlias type="com.re_kid.discordbot.mapper.entity.SystemSetting" alias="SystemSetting" />
+    <typeAlias type="com.re_kid.discordbot.db.entity.SystemSetting" alias="SystemSetting" />
   </typeAliases>
   <environments default="postgres">
     <environment id="postgres">

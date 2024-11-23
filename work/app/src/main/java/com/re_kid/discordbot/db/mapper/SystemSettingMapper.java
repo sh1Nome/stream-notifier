@@ -1,6 +1,6 @@
-package com.re_kid.discordbot.mapper;
+package com.re_kid.discordbot.db.mapper;
 
-import com.re_kid.discordbot.mapper.entity.SystemSetting;
+import com.re_kid.discordbot.db.entity.SystemSetting;
 
 public interface SystemSettingMapper {
 
