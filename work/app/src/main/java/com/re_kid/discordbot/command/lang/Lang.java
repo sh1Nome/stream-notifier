@@ -2,8 +2,6 @@ package com.re_kid.discordbot.command.lang;
 
 import java.util.Arrays;
 
-import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
 import org.slf4j.Logger;
 
 import com.re_kid.discordbot.I18n;
@@ -13,8 +11,8 @@ import com.re_kid.discordbot.command.Prefix;
 import com.re_kid.discordbot.command.help.Help;
 import com.re_kid.discordbot.command.lang.option.En;
 import com.re_kid.discordbot.command.lang.option.Ja;
-import com.re_kid.discordbot.mapper.SystemSettingMapper;
-import com.re_kid.discordbot.mapper.entity.SystemSetting;
+import com.re_kid.discordbot.db.entity.SystemSetting;
+import com.re_kid.discordbot.db.repository.SystemSettingRepository;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
@@ -36,8 +34,8 @@ public class Lang extends Command {
     private final Help help;
 
     public Lang(Prefix prefix, String value, String optionSeparator, En en, Ja ja, Help help,
-            JDA jda, SqlSessionFactory sqlSessionFactory, I18n i18n, Logger logger) {
-        super(prefix, value, optionSeparator, i18n, sqlSessionFactory, logger);
+            JDA jda, SystemSettingRepository systemSettingRepository, I18n i18n, Logger logger) {
+        super(prefix, value, optionSeparator, i18n, systemSettingRepository, logger);
         this.en = en;
         this.ja = ja;
         this.jda = jda;
@@ -97,17 +95,13 @@ public class Lang extends Command {
      */
     private MessageCreateAction sendMessageAndUpdateSettingForEn(MessageReceivedEvent event) {
         boolean success = false;
-        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-            String guildId = event.getGuild().getId();
-            SystemSettingMapper systemSettingMapper = sqlSession.getMapper(SystemSettingMapper.class);
-            SystemSetting selectData = systemSettingMapper.selectById(guildId);
-            if (selectData == null) {
-                success = systemSettingMapper.insertSystemSetting(new SystemSetting(guildId, this.en.getValue(), ""));
-            } else {
-                success = systemSettingMapper
-                        .updateSystemSetting(new SystemSetting(guildId, this.en.getValue(), selectData.getChannelId()));
-            }
-            sqlSession.commit();
+        String guildId = event.getGuild().getId();
+        SystemSetting selectData = systemSettingRepository.selectById(guildId);
+        if (selectData == null) {
+            success = systemSettingRepository.insertSystemSetting(new SystemSetting(guildId, this.en.getValue(), ""));
+        } else {
+            success = systemSettingRepository
+                    .updateSystemSetting(new SystemSetting(guildId, this.en.getValue(), selectData.getChannelId()));
         }
         return this.sendMessage(event, success);
     }
@@ -120,17 +114,14 @@ public class Lang extends Command {
      */
     private MessageCreateAction sendMessageAndUpdateSettingForJa(MessageReceivedEvent event) {
         boolean success = false;
-        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-            String guildId = event.getGuild().getId();
-            SystemSettingMapper systemSettingMapper = sqlSession.getMapper(SystemSettingMapper.class);
-            SystemSetting selectData = systemSettingMapper.selectById(guildId);
-            if (selectData == null) {
-                success = systemSettingMapper.insertSystemSetting(new SystemSetting(guildId, this.ja.getValue(), ""));
-            } else {
-                success = systemSettingMapper
-                        .updateSystemSetting(new SystemSetting(guildId, this.ja.getValue(), selectData.getChannelId()));
-            }
-            sqlSession.commit();
+        String guildId = event.getGuild().getId();
+
+        SystemSetting selectData = systemSettingRepository.selectById(guildId);
+        if (selectData == null) {
+            success = systemSettingRepository.insertSystemSetting(new SystemSetting(guildId, this.ja.getValue(), ""));
+        } else {
+            success = systemSettingRepository
+                    .updateSystemSetting(new SystemSetting(guildId, this.ja.getValue(), selectData.getChannelId()));
         }
         return this.sendMessage(event, success);
     }

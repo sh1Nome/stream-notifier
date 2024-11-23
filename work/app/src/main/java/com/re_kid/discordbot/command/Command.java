@@ -3,11 +3,11 @@ package com.re_kid.discordbot.command;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-import org.apache.ibatis.session.SqlSessionFactory;
 import org.slf4j.Logger;
 
 import com.google.common.base.Strings;
 import com.re_kid.discordbot.I18n;
+import com.re_kid.discordbot.db.repository.SystemSettingRepository;
 
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
@@ -22,23 +22,23 @@ public class Command {
     protected final String value;
     protected final String optionSeparator;
     protected final I18n i18n;
-    protected final SqlSessionFactory sqlSessionFactory;
+    protected final SystemSettingRepository systemSettingRepository;
     protected final Logger logger;
 
     public Command(Prefix prefix, String value, String optionSeparator, I18n i18n,
-            SqlSessionFactory sqlSessionFactory, Logger logger) {
+            SystemSettingRepository systemSettingRepository, Logger logger) {
         this.prefix = prefix;
         this.value = value;
         this.optionSeparator = optionSeparator;
         this.i18n = i18n;
-        this.sqlSessionFactory = sqlSessionFactory;
+        this.systemSettingRepository = systemSettingRepository;
         this.logger = logger;
     }
 
     public Command(Message message, Prefix prefixDefinition) {
         this.optionSeparator = null;
         this.i18n = null;
-        this.sqlSessionFactory = null;
+        this.systemSettingRepository = null;
         this.logger = null;
         String[] command = message.getContentRaw().split(prefixDefinition.getSeparator());
         if (1 == command.length) {
