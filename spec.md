@@ -53,7 +53,7 @@ flowchart TD
     %% ノード関係
     cHelp -->|実行| outHelp
 
-    outHelp -.->|言語設定を取得する| setting
+    setting -.->|言語設定を取得する| outHelp
 
     cLang --> runLang --> setting
     cNotifyMe --> runNotifyMe --> setting
