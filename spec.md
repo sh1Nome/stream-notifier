@@ -1,32 +1,44 @@
-# 概要
-* 配信の通知をするDiscordのBot
+# 仕様書
+配信の通知をするDiscord Bot
 
-# 対応プラットフォーム
-* YouTube
+## 対応プラットフォーム
 * Twitch
 
-# 仕様
-## アカウント登録
-* `sn!regist [OPTION] [ACCOUNT]`
-    * OPTION
-        * `--youtube`
-        * `--twitch`
-
-## アカウント登録解除
-* `sn!unregist [OPTION]`
-    * OPTION
-        * `--youtube`
-        * `--twitch`
-
-## 言語設定
+## コマンド
+### 言語設定
 * `sn!lang [OPTION]`
     * OPTION
         * `--ja`
         * `--en`
 
-## 通知チャンネル設定
+### 通知チャンネル設定
 * `sn!notifyMe`
 * `sn!notNotifyMe`
 
-## ヘルプ
+### ヘルプ
 * `sn!help`
+
+## フローチャート
+```mermaid
+flowchart TD
+    %% コマンド
+    cHelp([sn!help])
+    cLang([sn!lang])
+    cNotifyMe([sn!notifyMe])
+    cNotNotifyMe([sn!notNotifyMe])
+
+    %% 出力
+    outHelp[ヘルプを出力する]
+
+    %% 入力
+    setting[システム設定]
+
+    %% ノード関係
+    cHelp -->|実行| outHelp
+
+    setting -.->|言語設定を取得する| outHelp
+
+    cLang -->|言語設定をする| setting
+    cNotifyMe -->|通知チャンネルを設定する| setting
+    cNotNotifyMe -->|通知チャンネルを解除する| setting
+```
