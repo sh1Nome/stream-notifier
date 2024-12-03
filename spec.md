@@ -28,22 +28,17 @@ flowchart TD
     cNotNotifyMe([sn!notNotifyMe])
 
     %% 出力
-    outHelp[/ヘルプを出力する/]
+    outHelp[ヘルプを出力する]
 
     %% 入力
-    setting[/システム設定/]
-
-    %% 処理
-    runLang[言語設定をする]
-    runNotifyMe[通知チャンネルを設定する]
-    runNotNotifyMe[通知チャンネルを解除する]
+    setting[システム設定]
 
     %% ノード関係
     cHelp -->|実行| outHelp
 
     setting -.->|言語設定を取得する| outHelp
 
-    cLang --> runLang --> setting
-    cNotifyMe --> runNotifyMe --> setting
-    cNotNotifyMe --> runNotNotifyMe --> setting
+    cLang -->|言語設定をする| setting
+    cNotifyMe -->|通知チャンネルを設定する| setting
+    cNotNotifyMe -->|通知チャンネルを解除する| setting
 ```
