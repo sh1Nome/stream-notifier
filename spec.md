@@ -5,18 +5,6 @@
 * Twitch
 
 ## コマンド
-### アカウント登録
-* `sn!regist [OPTION] [ACCOUNT]`
-    * OPTION
-        * `--youtube`
-        * `--twitch`
-
-### アカウント登録解除
-* `sn!unregist [OPTION]`
-    * OPTION
-        * `--youtube`
-        * `--twitch`
-
 ### 言語設定
 * `sn!lang [OPTION]`
     * OPTION
