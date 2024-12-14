@@ -6,21 +6,37 @@
 
 ## コマンド
 ### 言語設定
-* `sn!lang [OPTION]`
-    * OPTION
-        * `--ja`
-        * `--en`
+言語設定をする  
+```
+sn!lang [OPTION]
+```
+
+#### OPTION
+|key|args|detail|
+|:--|:--|:--|
+|ja|-|日本語|
+|en|-|英語|
 
 ### 通知チャンネル設定
-* `sn!notifyMe`
-* `sn!notNotifyMe`
+通知チャンネルを設定する  
+```
+sn!notifyMe
+```
+
+通知チャンネル設定を解除する
+```
+sn!notNotifyMe
+```
 
 ### ヘルプ
-* `sn!help`
+ヘルプ表示する
+```
+sn!help
+```
 
 ## フローチャート
 ```mermaid
-flowchart TD
+graph TD
     %% コマンド
     cHelp([sn!help])
     cLang([sn!lang])
