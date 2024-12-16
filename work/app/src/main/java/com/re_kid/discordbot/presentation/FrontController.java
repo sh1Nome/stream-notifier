@@ -26,7 +26,8 @@ public class FrontController implements EventListener {
     private final Logger logger;
 
     @Inject
-    public FrontController(HelpController helpController, LangController langController, NotifyMeController notifyMeController, NotNotifyMeController notNotifyMeController, Logger logger) {
+    public FrontController(HelpController helpController, LangController langController,
+            NotifyMeController notifyMeController, NotNotifyMeController notNotifyMeController, Logger logger) {
         this.commandPrefix = "sn!";
 
         this.dispatch = new HashMap<>();
