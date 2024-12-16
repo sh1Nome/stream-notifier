@@ -1,5 +1,6 @@
 package com.re_kid.discordbot.presentation.command;
 
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -20,7 +21,7 @@ public class HelpController implements Controller {
     }
 
     @Override
-    public void execute(Map<String, String> optionsAndArgs) {
+    public void execute(Map<String,List<String>> optionAndArgs) {
         logger.info("help invoked");
     }
 
