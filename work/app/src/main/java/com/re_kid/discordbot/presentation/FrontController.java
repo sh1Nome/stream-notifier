@@ -44,10 +44,10 @@ public class FrontController implements EventListener {
         if (event instanceof MessageReceivedEvent) {
             MessageReceivedEvent messageReceivedEvent = (MessageReceivedEvent) event;
             String message = messageReceivedEvent.getMessage().getContentRaw();
+            String compare = Arrays.asList(message.split(" ")).getFirst();
             this.dispatch.entrySet().stream()
                     .filter((map) -> {
                         String command = this.commandPrefix + map.getKey();
-                        String compare = Arrays.asList(message.split(" ")).getFirst();
                         return command.equals(compare);
                     })
                     .findFirst()
