@@ -2,29 +2,26 @@ package com.re_kid.discordbot;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.re_kid.discordbot.command.lang.Lang;
-import com.re_kid.discordbot.listener.StreamNotifierEventListener;
+import com.re_kid.discordbot.presentation.FrontController;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import net.dv8tion.jda.api.JDA;
 
-/**
- * メインクラス
- */
+@Singleton
 public class StreamNotifier {
 
-    private final JDA api;
-    private final StreamNotifierEventListener streamNotifierEventListener;
-    private final Lang lang;
+    private final JDA jda;
+    private final FrontController frontController;
 
-    public StreamNotifier(JDA api, StreamNotifierEventListener streamNotifierEventListener, Lang lang) {
-        this.api = api;
-        this.streamNotifierEventListener = streamNotifierEventListener;
-        this.lang = lang;
+    @Inject
+    public StreamNotifier(JDA jda, FrontController frontController) {
+        this.jda = jda;
+        this.frontController = frontController;
     }
 
-    public void run() {
-        this.lang.changeActivity();
-        this.api.addEventListener(this.streamNotifierEventListener);
+    private void run() {
+        jda.addEventListener(this.frontController);
     }
 
     public static void main(String[] args) {
