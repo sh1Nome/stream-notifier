@@ -1,6 +1,5 @@
 package com.re_kid.discordbot;
 
-import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -9,7 +8,6 @@ import org.slf4j.LoggerFactory;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
-import com.re_kid.discordbot.util.DiscordOutputStream;
 
 import jakarta.inject.Singleton;
 import net.dv8tion.jda.api.JDA;
@@ -39,12 +37,6 @@ public class StreamNotifierModule extends AbstractModule {
     @Singleton
     public Logger provideLogger() {
         return LoggerFactory.getLogger(StreamNotifier.class);
-    }
-
-    @Provides
-    @Singleton
-    public PrintWriter providePrintWriter(DiscordOutputStream discordOutputStream) {
-        return new PrintWriter(discordOutputStream);
     }
 
 }

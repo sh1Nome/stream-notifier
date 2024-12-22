@@ -3,7 +3,7 @@ package com.re_kid.discordbot.util;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import jakarta.inject.Singleton;
+import com.google.inject.Singleton;
 
 @Singleton
 public class DiscordOutputStream extends OutputStream {
@@ -19,7 +19,7 @@ public class DiscordOutputStream extends OutputStream {
         this.sb.append((char) b);
     }
 
-    public String getOutput() {
+    protected String getOutput() {
         String output = this.sb.toString();
         this.sb.setLength(0);
         return output;
