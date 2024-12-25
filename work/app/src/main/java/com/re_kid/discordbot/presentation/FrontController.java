@@ -36,10 +36,12 @@ public class FrontController implements EventListener {
             String message = messageReceivedEvent.getMessage().getContentRaw();
             List<String> splitedMessages = new ArrayList<>(Arrays.asList(message.split(" ")));
             if (sn.toString().equals(splitedMessages.remove(0))) {
-                new CommandLine(sn).setOut(this.discordPrintWriter).execute(splitedMessages.toArray(new String[0]));
+                new CommandLine(sn)
+                        .setOut(this.discordPrintWriter)
+                        .execute(splitedMessages.toArray(new String[0]));
             }
             logger.info(message);
-            logger.warn(this.discordPrintWriter.getOutput());
+            this.discordPrintWriter.recordLog();
         }
     }
 
