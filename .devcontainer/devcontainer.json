@@ -16,9 +16,9 @@
                 "java.debug.settings.hotCodeReplace": "never"
             },
             "extensions": [
-                "vscjava.vscode-gradle",
                 "vscjava.vscode-java-pack",
-                "redhat.vscode-xml"
+                "redhat.vscode-xml",
+                "vmware.vscode-boot-dev-pack"
             ]
         }
     }
