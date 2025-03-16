@@ -4,41 +4,10 @@
 ## 対応プラットフォーム
 * Twitch
 
-## コマンド
-### 言語設定
-* `sn!lang [OPTION]`
-    * OPTION
-        * `--ja`
-        * `--en`
-
-### 通知チャンネル設定
-* `sn!notifyMe`
-* `sn!notNotifyMe`
-
-### ヘルプ
-* `sn!help`
-
-## フローチャート
-```mermaid
-flowchart TD
-    %% コマンド
-    cHelp([sn!help])
-    cLang([sn!lang])
-    cNotifyMe([sn!notifyMe])
-    cNotNotifyMe([sn!notNotifyMe])
-
-    %% 出力
-    outHelp[ヘルプを出力する]
-
-    %% 入力
-    setting[システム設定]
-
-    %% ノード関係
-    cHelp -->|実行| outHelp
-
-    setting -.->|言語設定を取得する| outHelp
-
-    cLang -->|言語設定をする| setting
-    cNotifyMe -->|通知チャンネルを設定する| setting
-    cNotNotifyMe -->|通知チャンネルを解除する| setting
-```
+## 設定方法
+Discordからのコマンドで設定する方式はとらずに、画面から設定できるようにする。  
+設定画面へアクセスするにはDiscordサーバーの管理者である必要がある。  
+設定できる項目は以下の通り。
+* 言語: 英語・日本語
+* 通知チャンネル: どこに通知をするのか
+* 配信アカウント: Twitchのアカウント
