@@ -1,0 +1,6 @@
+.cache
+.dotnet
+.gradle
+.sts4
+.vscode-server
+build
