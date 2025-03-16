@@ -2,7 +2,7 @@
     "name": "StreamNotifierDev",
     "dockerComposeFile": "../docker-compose.yml",
     "service": "jdk",
-    "workspaceFolder": "/home/work",
+    "workspaceFolder": "/home/work/streamnotifier",
     "shutdownAction": "none",
     "customizations": {
         "vscode": {
@@ -17,7 +17,6 @@
             },
             "extensions": [
                 "vscjava.vscode-java-pack",
-                "redhat.vscode-xml",
                 "vmware.vscode-boot-dev-pack"
             ]
         }
