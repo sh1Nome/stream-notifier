@@ -1,4 +1,9 @@
 services:
+  node:
+    image: 'node:23'
+    init: true
+    user: 'node'
+    command: 'tail -f /dev/null'
   jdk:
     build: .
     init: true
@@ -8,6 +13,7 @@ services:
       - './.env'
   db:
     image: 'postgres:16'
+    user: 'postgres'
     volumes:
       - './data:/var/lib/postgresql/data'
     env_file:
