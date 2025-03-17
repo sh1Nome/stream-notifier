@@ -3,4 +3,5 @@
 .gradle
 .sts4
 .vscode-server
+.bash_history
 build
