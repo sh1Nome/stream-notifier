@@ -2,7 +2,6 @@ version: '3.9'
 services:
   jdk:
     build: .
-    container_name: 'jdk'
     init: true
     volumes:
       - './work:/home/work'
@@ -10,13 +9,11 @@ services:
       - './.env'
   db:
     image: 'postgres:16'
-    container_name: 'db'
     volumes:
       - './data:/var/lib/postgresql/data'
     env_file:
       - './.env'
   adminer:
     image: 'adminer'
-    container_name: 'adminer'
     ports:
       - '49152:8080'
