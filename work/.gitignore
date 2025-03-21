@@ -1,7 +1,10 @@
 .cache
 .dotnet
+.gnupg
 .gradle
+.hawtjni
 .sts4
+.lemminx
 .vscode-server
 .bash_history
 build
