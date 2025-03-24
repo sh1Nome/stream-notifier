@@ -4,18 +4,23 @@ services:
     init: true
     user: 'node'
     command: 'tail -f /dev/null'
+    working_dir: '/home/node'
+    volumes:
+      - './work_node:/home/node'
+    env_file:
+      - './.env'
   jdk:
     build: .
     init: true
     volumes:
-      - './work:/home/work'
+      - './work_jdk:/home/work'
     env_file:
       - './.env'
   db:
     image: 'postgres:16'
     user: 'postgres'
     volumes:
-      - './data:/var/lib/postgresql/data'
+      - './data_postgres:/var/lib/postgresql/data'
     env_file:
       - './.env'
   adminer:
