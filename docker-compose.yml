@@ -20,10 +20,12 @@ services:
     image: 'postgres:16'
     user: 'postgres'
     volumes:
-      - './data_postgres:/var/lib/postgresql/data'
+      - 'db-data:/var/lib/postgresql/data'
     env_file:
       - './.env'
   adminer:
     image: 'adminer'
     ports:
       - '49152:8080'
+volumes:
+  db-data:
